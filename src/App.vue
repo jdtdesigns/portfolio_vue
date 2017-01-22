@@ -1,8 +1,7 @@
 <template>
   <div class="container" >
   	<top-bar></top-bar>
-  	<landing></landing>
-  	<portfolio></portfolio>
+  	<router-view></router-view>
   	<app-footer></app-footer>
   </div>
 </template>
@@ -10,8 +9,6 @@
 <script>
 import TopBar from './components/TopBar.vue'
 import Footer from './components/Footer.vue'
-import Landing from './components/Landing.vue'
-import Portfolio from './components/portfolio/Portfolio.vue'
 
 export default {
   data () {
@@ -21,9 +18,7 @@ export default {
   },
   components: {
   	TopBar,
-  	appFooter: Footer,
-  	Landing,
-  	Portfolio
+  	appFooter: Footer
   }
 }
 </script>
@@ -90,15 +85,5 @@ export default {
 
 	.right {
 		justify-content: flex-end;
-	}
-
-	section {
-		.section-header {
-			text-align: center;
-			padding: 55px 0;
-			font-family: 'Lato', sans-serif;
-			font-weight: 400;
-			color: #777;
-		}
 	}
 </style>

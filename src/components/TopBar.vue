@@ -19,7 +19,7 @@
 		},
 		methods: {
 			setScrollStyles(e) {
-				var y = e.srcElement.scrollingElement.scrollTop
+				var y = e.target.scrollingElement.scrollTop
 
 				if ( y > 60 ) 
 					this.set_scroll_class = true 
@@ -86,6 +86,7 @@
 			margin: 0 15px;
 			color: #777;
 			position: relative;
+					transform: translate3d(0,0,0);
 			&:after {
 				content: '';
 				position: absolute;

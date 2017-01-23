@@ -88,9 +88,9 @@
 				font-family: 'Lato', sans-serif;
 				font-weight: 300;
 				border-bottom: 1px dotted #333;
-				padding-bottom: 1px;
+				padding-bottom: 2px;
 				display: inline-block;
-				width: 165px;
+				align-self: flex-start;
 			}
 		}
 	}

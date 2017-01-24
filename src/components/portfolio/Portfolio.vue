@@ -21,7 +21,7 @@
 
 		<div class="portfolio-header column y-center">
 			<form class="row y-center">
-				<input type="text" placeholder="Type a Category (ie. HTML or Javacript)">
+				<input type="text" placeholder="Type a Category (ie. Vue or Laravel)">
 				<i class="fa fa-search"></i>
 			</form>
 		</div>
@@ -165,6 +165,7 @@
 				padding: 8px 10px 8px 35px;
 				border-radius: 2px;
 				min-width: 290px;
+				color: #777;
 			}
 			.fa {
 				color: #bbb;
@@ -178,11 +179,20 @@
 	}
 
 	button.view-more {
-		margin: 40px 0 20px;
+		margin: 40px 0 40px;
 		background: none;
 		font-size: 1.2em;
 		text-transform: uppercase;
 		color: #999;
-		border-bottom: 1px dotted #999;
+		border: 1px solid #999;
+		border-radius: 2px;
+		padding: 7px 45px;
+		cursor: pointer;
+		transition: background .3s, color .3s, border .3s;
+		&:hover {
+			background: #bbb;
+			border-color: #bbb;
+			color: #fff;
+		}
 	}	
 </style>

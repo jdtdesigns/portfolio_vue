@@ -1,10 +1,13 @@
 <template>
-	<header class="row split y-center" :class="{scroll: set_scroll_class}">
-		<h3 class="logo">JD Tadlock</h3>
+	<header class="row split y-center" 
+		:class="headerClasses">
+		<router-link to="/" class="logo">
+			<h3>JD Tadlock</h3>
+		</router-link>
 		<nav>	
-			<a href="#portfolio" class="active">Portfolio</a>
-			<a href="#about">About</a>
-			<a href="#contact">Contact</a>
+			<router-link to="/" active-class="active" exact>Portfolio</router-link>
+			<router-link to="/about" active-class="active">About</router-link>
+			<router-link to="/contact" active-class="active">Contact</router-link>
 		</nav>
 	</header>
 </template>
@@ -15,6 +18,15 @@
 			return {
 				topBarPos: 0,
 				set_scroll_class: false
+			}
+		},
+		computed: {
+			headerClasses() {
+				return {
+					scroll: this.set_scroll_class,
+					about: this.$route.path == '/about',
+					'contact-header': this.$route.path == '/contact'
+				}
 			}
 		},
 		methods: {
@@ -41,25 +53,44 @@
 		left: 0;
 		z-index: 500;
 		width: 100%;
-		padding: 25px 8% 14px;
-		transition: opacity .8s, padding .8s, background .8s, box-shadow .8s, color .8s;
+		padding: 0 8%;
+		height: 60px;
+		transition: all .8s;
+		user-select: none;
+		&.about {
+			.logo h3 {
+				color: #aaa;
+			}
+			a {
+				color: #aaa;
+				&.active {
+					color: #ddd;
+				}
+			}
+		}
+		&.contact-header {
+			a {
+				color: #eee;
+			}
+		}
 		&.scroll {
 			background: #f8f8f8;
-			padding: 10px 8% 16px;
-			box-shadow: 0 0 13px rgba(#000, .2);
-			animation: fadeIn .8s;
-			.logo {
+			transform: translate3d(0, 0, 0);
+			box-shadow: 0 0 10px rgba(#000, .1);
+			top: -6px;
+			height: 50px;
+			.logo h3 {
 				opacity: 1;
 				visibility: visible;
 			}
 			a {
-				color: #999;
+				color: #999 !important;
 				&:after {
 					background: #999;
 				}
 			}
 		}
-		.logo {
+		.logo h3 {
 			text-transform: uppercase;
 			font-family: 'Lato', sans-serif;
 			font-weight: 300;
@@ -87,7 +118,7 @@
 			color: #777;
 			position: relative;
 					transform: translate3d(0,0,0);
-			&:after {
+			&:not(.logo):after {
 				content: '';
 				position: absolute;
 				left: 0;
@@ -104,6 +135,12 @@
 					transform: scaleX(1);		
 				}
 			}
+		}
+		&.contact-header a:after {
+			background: #eee;
+		}
+		&.scroll.contact-header a:after {
+			background: #999;
 		}
 	}
 </style>

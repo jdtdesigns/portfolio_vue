@@ -2,15 +2,17 @@
   <div class="container" >
   	<top-bar></top-bar>
   	<router-view></router-view>
-  	<app-footer></app-footer>
+  	<app-footer v-if="$route.path != '/admin'"></app-footer>
   </div>
 </template>
 
 <script>
 import TopBar from './components/TopBar.vue'
 import Footer from './components/Footer.vue'
+import faker from 'faker'
 
 export default {
+
   data () {
     return {
       
@@ -19,6 +21,38 @@ export default {
   components: {
   	TopBar,
   	appFooter: Footer
+  },
+  created() {
+  	// firebase.auth().createUserWithEmailAndPassword('jt7903@gmail.com', 'jdluvssarah1983')
+  	// .catch(err => console.log(err))
+
+  // 	const db = firebase.database(),
+		// 			projects = db.ref('projects/')
+		// let c
+
+		// for ( c = 0; c < 10; c++ ) {
+		// 	let tags = [], images_sub = [], i,
+		// 			key = projects.push().key
+
+		// 	for ( i = 0; i < 5; i++ ) {
+		// 		images_sub.push(faker.image.image())
+		// 		tags.push(faker.lorem.word())
+		// 	}
+
+
+		// 	let project = {
+		// 		title: faker.lorem.sentence(),
+		// 		description: faker.lorem.paragraphs(),
+		// 		tags: tags,
+		// 		image_main: faker.image.image(),
+		// 		images_sub: images_sub
+		// 	}
+
+		// 	// firebase.storage().ref()
+		// 	// 	.child(`images/${key}/${this.image_name}`)
+		// 	// 	.put(this.image)
+		// 	projects.child(key).set(project)
+		// }
   }
 }
 </script>
@@ -42,9 +76,30 @@ export default {
 		max-width: 100%;
 	}
 
-	button, input {
+	button, input, textarea {
 		outline: none;
 		border: none;
+	}
+
+	button.submit-btn {
+		padding: 11px 0 13px;
+		font-size: 1.2em;
+		text-transform: uppercase;
+		font-family: 'Lato', sans-serif;
+		font-weight: 400;
+		background: #5293cf;
+		color: #fff;
+		border-radius: 1px;
+		margin-top: 5px;
+		cursor: pointer;
+		transition: background .3s;
+		&:hover {
+			background: darken(#5293cf, 3%);
+		}
+	}
+
+	textarea {
+		min-height: 150px;
 	}
 
 	a {

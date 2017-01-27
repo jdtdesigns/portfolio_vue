@@ -8,23 +8,30 @@
 			<router-link to="/" active-class="active" exact>Portfolio</router-link>
 			<router-link to="/about" active-class="active">About</router-link>
 			<router-link to="/contact" active-class="active">Contact</router-link>
+			<router-link 
+				to="/admin" 
+				active-class="active"
+				v-if="is_admin">Admin</router-link>
 		</nav>
 	</header>
 </template>
 
 <script>
+	// import { bus } from '../main'
+
 	export default {
+		props: ['is_admin'],
 		data() {
 			return {
 				topBarPos: 0,
-				set_scroll_class: false
+				set_scroll_class: false,
 			}
 		},
 		computed: {
 			headerClasses() {
 				return {
 					scroll: this.set_scroll_class,
-					about: this.$route.path == '/about',
+					about: this.$route.path == '/about' || this.$route.path == '/admin',
 					'contact-header': this.$route.path == '/contact'
 				}
 			}
@@ -40,6 +47,12 @@
 		},
 		mounted() {
 			window.addEventListener('scroll', this.setScrollStyles)
+		},
+		created() {
+			// bus.$on('is_admin', value => {
+			// 	console.log(value)
+			// 	this.is_admin = value
+			// })
 		}
 	}
 </script>

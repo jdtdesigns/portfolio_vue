@@ -1,6 +1,6 @@
 <template>
   <div class="container" >
-  	<top-bar></top-bar>
+  	<top-bar :is_admin="is_admin"></top-bar>
   	<router-view></router-view>
   	<app-footer v-if="$route.path != '/admin'"></app-footer>
   </div>
@@ -10,12 +10,12 @@
 import TopBar from './components/TopBar.vue'
 import Footer from './components/Footer.vue'
 import faker from 'faker'
+import { bus } from './main'
 
 export default {
-
   data () {
     return {
-      
+      is_admin: false
     }
   },
   components: {
@@ -23,6 +23,20 @@ export default {
   	appFooter: Footer
   },
   created() {
+  	const auth = firebase.auth()
+
+		auth.onAuthStateChanged(user => {
+			if ( user ) {
+				const id = user.uid
+
+				firebase.database().ref('/admins/' + id)
+				.once('value').then(data => {
+					if ( data.val() )
+						this.is_admin = true
+						// bus.setAdmin(true)
+				})
+			}
+		})
   	// firebase.auth().createUserWithEmailAndPassword('jt7903@gmail.com', 'jdluvssarah1983')
   	// .catch(err => console.log(err))
 
@@ -81,6 +95,10 @@ export default {
 		border: none;
 	}
 
+	button {
+		cursor: pointer;
+	}
+
 	button.submit-btn {
 		padding: 11px 0 13px;
 		font-size: 1.2em;
@@ -91,7 +109,6 @@ export default {
 		color: #fff;
 		border-radius: 1px;
 		margin-top: 5px;
-		cursor: pointer;
 		transition: background .3s;
 		&:hover {
 			background: darken(#5293cf, 3%);

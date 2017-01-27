@@ -10,7 +10,11 @@ Vue.use(_)
 export const bus = new Vue({
 	methods: {
 		toggleCreateModal() {
-			this.$emit('toggle_create_modal')
+			// this.$emit('toggle_create_modal')
+		},
+		setAdmin(state) {
+			console.log(state)
+			this.$emit('is_admin', state)
 		}
 	}
 })

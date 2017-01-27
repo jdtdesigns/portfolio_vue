@@ -57,11 +57,13 @@
 				if ( this.tag ) this.tags.push(this.tag)
 				this.tag = ''
 			},
+
 			removeTag(tag) {
 				_.map(this.tags, (val, i) => {
 					if ( val == tag ) this.tags.splice(i, 1)
 				})
 			},
+
 			removeImage(index) {
 				if ( this.image_previews[index][0] == 'main' )
 					this.has_main_image = false
@@ -69,6 +71,7 @@
 				this.image_previews.splice(index, 1)				
 				this.images.splice(index, 1)	
 			},
+
 			addImage(type, e) {
 				let reader = new FileReader(),
 						format = e.target.files[0].name
@@ -88,12 +91,14 @@
 
 				e.target.value = ''
 			},
+			
 			addProject() {
 				if ( !this.title ||
 				 !this.description || 
 				 !this.tags.length || 
-				 !this.has_main_image)
-					return
+				 !this.has_main_image ) return
+
+				this.$emit('close_modal', false)
 
 				const db = firebase.database(),
 							projects = db.ref('projects/'),
@@ -103,9 +108,9 @@
 					title: this.title,
 					description: this.description,
 					tags: this.tags,
-					images: []
+					images: [],
+					date_added: new Date().getTime()
 				}
-
 
 				_.map(this.images, (image, i) => {
 					let image_ref = firebase.storage().ref()
@@ -127,28 +132,6 @@
 						}
 					})				
 				})
-				// _.map(this.images, (image, i) => {
-				// 	let image_ref = firebase.storage().ref()
-				// 		.child(`images/${key}/${image[0]}`)
-
-				// 	image_ref.put(image[1]).then(snapshot => {
-				// 		project.images.push(snapshot.metadata.downloadURLs[0])
-
-				// 		if ( i === this.images.length - 1 ) {
-				// 			projects.child(key).set(project)
-
-				// 			this.title = ''
-				// 			this.description = ''
-				// 			this.tags = []
-				// 			this.images = []
-				// 			this.image_previews = []
-				// 		}
-				// 	})
-					
-				// })
-
-				
-
 			}
 		}
 	}
@@ -209,6 +192,7 @@
 					max-height: 50px;
 					margin-bottom: 5px;
 					border: 2px solid transparent;
+					cursor: pointer;
 					&.main {
 						border-color: #eee;
 					}

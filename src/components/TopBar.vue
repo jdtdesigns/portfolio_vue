@@ -84,6 +84,12 @@
 		&.contact-header {
 			a {
 				color: #eee;
+				&.active {
+					color: #fff;
+					&:after {
+						background: #fff;
+					}
+				}
 			}
 		}
 		&.scroll {

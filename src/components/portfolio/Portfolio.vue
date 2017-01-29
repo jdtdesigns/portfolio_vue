@@ -18,14 +18,14 @@
 				</div>
 			</div>
 		</div>
-
+a
 		<div class="portfolio-header column y-center">
 			<form class="row y-center">
 				<input type="text" placeholder="Type a Category (ie. Vue or Laravel)">
 				<i class="fa fa-search"></i>
 			</form>
 		</div>
-		<project v-for="n in 6"></project>
+		<project v-for="project in data" :project="project"></project>
 		<div class="row x-center">
 			<button class="view-more">View More</button>
 		</div>
@@ -36,6 +36,53 @@
 	import Project from './Project.vue'
 
 	export default {
+		data() {
+			return {
+				data: [
+				{
+					image: 'dist/about.jpg',
+					title: 'First One',
+					tags: ['html', 'css', 'javascript'],
+					link: 'http://google.com',
+					date: '1/27/17'
+				},
+				{
+					image: 'dist/contact.jpg',
+					title: 'Second One',
+					tags: ['html', 'css', 'javascript'],
+					link: 'http://google.com',
+					date: '1/27/17'
+				},
+				{
+					image: 'dist/landing.png',
+					title: 'Third One',
+					tags: ['html', 'css', 'javascript'],
+					link: 'http://google.com',
+					date: '1/27/17'
+				},
+				{
+					image: 'dist/about_mid.jpg',
+					title: 'Forth One',
+					tags: ['html', 'css', 'javascript'],
+					link: 'http://google.com',
+					date: '1/27/17'
+				},
+				{
+					image: 'dist/about.jpg',
+					title: 'Fifth One',
+					tags: ['html', 'css', 'javascript'],
+					link: 'http://google.com',
+					date: '1/27/17'
+				}
+				]
+			}
+		},
+		methods: {
+			getProjects() {
+				// firebase
+
+			}
+		},
 		components: {
 			Project
 		}	

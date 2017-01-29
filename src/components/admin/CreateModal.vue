@@ -3,6 +3,7 @@
 		<form class="column" @click.stop>
 			<h1>Create Project</h1>
 			<input type="text" v-model="title" placeholder="Title" required>
+			<input type="text" v-model="link" placeholder="Preview Url" required>
 			<textarea v-model="description" placeholder="Description" required></textarea>
 			<ul class="tags row">
 				<span v-if="!tags.length">No Tags Added</span>
@@ -44,6 +45,7 @@
 		data() {
 			return {
 				title: '',
+				link: '',
 				description: '',
 				tag: '',
 				tags: [],
@@ -106,6 +108,7 @@
 
 				let project = {
 					title: this.title,
+					link: this.link,
 					description: this.description,
 					tags: this.tags,
 					images: [],
@@ -144,15 +147,15 @@
 		left: 0;
 		right: 0;
 		margin: 0 auto;
-		z-index: 99;
+		z-index: 501;
 		&:before {
 			content: '';
 			position: absolute;
 			top: -80px;
 			left: 0;
 			width: 100%;
-			height: 100vh;
-			background: rgba(#000, .3);
+			height: 110vh;
+			background: rgba(#000, .5);
 			z-index: -1;
 		}
 		h1, span, form input, form textarea, button, label {
@@ -163,7 +166,7 @@
 			text-align: center;
 		}
 		form {
-			background: #444;
+			background: #555;
 			padding: 20px;
 			color: #eee;
 			input, textarea {

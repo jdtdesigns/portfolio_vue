@@ -4,18 +4,30 @@
 			v-if="show_modal"
 			@close_modal="show_modal = $event"></create-modal>
 		<div class="landing-text">
-			<div class="project-list column y-center">
-				<h1>Project Listing</h1>
+			<div class="admin-panel column y-center">
+				<h1>Admin Panel</h1>
 				<div class="row x-center">
 					<button class="admin-menu-btn column y-center x-center"
-					@click.stop="showModal"
+					@click="show_messages = false"
 					:class="{active: !show_messages}"><i class="fa fa-file-text"></i>Projects</button>
 					<button class="admin-menu-btn column y-center x-center"
-						@click.stop="showModal"
+						@click="show_messages = true"
 						:class="{active: show_messages}"><i class="fa fa-envelope-o"></i>Messages</button>
 				</div>
-				<button class="add-project row y-center"><i class="fa fa-plus-square"></i>Add Project</button>
-				<table>
+				<button class="admin-action-btn row y-center"
+					@click.stop="showModal"
+					v-if="!show_messages"><i class="fa fa-plus-square"></i>Add Project</button>
+				<div class="row">
+					<button class="admin-action-btn row y-center"
+						@click="show_new_messages = true"
+						v-if="show_messages"
+						:class="{active: show_new_messages}"><i class="fa fa-inbox"></i>Unread</button>
+					<button class="admin-action-btn row y-center"
+						@click="show_new_messages = false"
+						v-if="show_messages"
+						:class="{active: !show_new_messages}"><i class="fa fa-archive"></i>Archive</button>
+				</div>
+				<table v-if="!show_messages">
 					<thead>
 						<th>Image</th>
 						<th>Title</th>
@@ -41,6 +53,20 @@
 						</tr>
 					</tbody>
 				</table>
+				<table v-if="show_messages">
+					<thead>
+						<th>Received</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th></th>
+					</thead>
+					<tbody>
+						<message v-for="message in messages" :message="message"></message>
+						<tr v-if="!messages.length">
+							<td colspan="4" height="100">No Messages Currently.</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -48,19 +74,58 @@
 
 <script>
 	import CreateModal from './CreateModal.vue'
+	import Message from './Message.vue'
 
 	export default {
 		data() {
 			return {
 				show_modal: false,
-				data: [],
+				show_new_messages: true,
 				loaded: false,
-				show_messages: false
+				show_messages: false,
+				data: [
+				{
+					image: 'dist/about.jpg',
+					title: 'First One',
+					tags: ['html', 'css', 'javascript'],
+					date: '1/27/17'
+				},
+				{
+					image: 'dist/contact.jpg',
+					title: 'Second One',
+					tags: ['html', 'css', 'javascript'],
+					date: '1/27/17'
+				},
+				{
+					image: 'dist/landing.png',
+					title: 'Third One',
+					tags: ['html', 'css', 'javascript'],
+					date: '1/27/17'
+				},
+				{
+					image: 'dist/about_mid.jpg',
+					title: 'Forth One',
+					tags: ['html', 'css', 'javascript'],
+					date: '1/27/17'
+				},
+				{
+					image: 'dist/about.jpg',
+					title: 'Fifth One',
+					tags: ['html', 'css', 'javascript'],
+					date: '1/27/17'
+				}
+				],
+				message_data: []
 			}
 		},
 		computed: {
 			projects() {
 				return _.orderBy(this.data, ['created'], ['desc'])
+			},
+			messages() {
+				return _.orderBy(_.filter(this.message_data, message => {
+					return this.show_new_messages ? !message.is_read : message.is_read
+				}), ['received'], ['desc'])
 			}
 		},
 		methods: {
@@ -107,15 +172,27 @@
 					})				
 			},
 
+			getMessages() {
+				const db = firebase.database(),
+							messages = db.ref('/messages')
+
+				messages.on('child_added', message => {
+					this.message_data.push(message.val())
+				})
+			},
+
 			editProject(key) {
 				console.log(key)
 			}
 		},
 		components: {
-			CreateModal
+			CreateModal,
+			Message
 		},
 		created() {
-			this.getProjects()
+			// this.getProjects()
+			this.getMessages()
+			// console.log(this.messages)
 		}	
 	}
 </script>
@@ -123,13 +200,14 @@
 <style lang="scss">
 	.admin {
 		background: #444;
+		min-height: 110vh;
 		h1 {
 			color: #ddd;
 			font-weight: 300;
 			margin-bottom: 15px;
 		}
 	}
-	.project-list {
+	.admin-panel {
 		padding: 0 5%;
 		font-family: 'Lato', sans-serif;
 		button.admin-menu-btn {
@@ -143,6 +221,10 @@
 			padding-bottom: 3px;
 			margin: 0 8px;
 			transition: background .3s, color .3s;
+			&:hover, &.active {
+				background: #dedede;
+				color: #333;
+			}
 			&.new-messages .fa {
 				position: relative;
 				&:after {
@@ -157,20 +239,13 @@
 					border-radius: 50%;
 				}
 			}
-			&:hover, &.active {
-				background: #dedede;
-				color: #333;
-			}
 			.fa {
 				font-size: 1.3em;
 				margin-bottom: 8px;
 			}
 		}
-		button.add-project {
-			// position: absolute;
-			// top: -33px;
-			// left: 1px;
-			margin-top: 20px;
+		button.admin-action-btn {
+			margin: 20px 5px 0;
 			padding: 5px 13px;
 			background: none;
 			border: 1px solid #eee;
@@ -178,7 +253,7 @@
 			color: #eee;
 			font-size: .95em;
 			transition: background .3s, color .3s;
-			&:hover {
+			&:hover, &.active {
 				background: #eee;
 				color: #333;
 			}
@@ -233,6 +308,18 @@
 								position: relative;
 								bottom: -1px;
 								margin-right: 8px;
+							}
+						}
+						button.view-message {
+							background: none;
+							border: 1px solid #eee;
+							border-radius: 2px;
+							padding: 4px 10px;
+							color: #eee;
+							transition: background .3s, color .3s;
+							&:hover {
+								background: #eee;
+								color: #333;
 							}
 						}
 					}

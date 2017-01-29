@@ -9,13 +9,13 @@
 <script>
 import TopBar from './components/TopBar.vue'
 import Footer from './components/Footer.vue'
-import faker from 'faker'
+// import faker from 'faker'
 import { bus } from './main'
 
 export default {
   data () {
     return {
-      is_admin: false
+      is_admin: true
     }
   },
   components: {
@@ -72,6 +72,8 @@ export default {
 </script>
 
 <style lang="scss">
+	@import './components/scss/variables';
+
 	* {
 		padding: 0;
 		margin: 0;
@@ -105,7 +107,7 @@ export default {
 		text-transform: uppercase;
 		font-family: 'Lato', sans-serif;
 		font-weight: 400;
-		background: #5293cf;
+		background: $blue;
 		color: #fff;
 		border-radius: 1px;
 		margin-top: 5px;
@@ -157,5 +159,17 @@ export default {
 
 	.right {
 		justify-content: flex-end;
+	}
+	
+	.swal2-modal {
+		font-family: 'Lato', sans-serif !important;
+		border-radius: 2px !important;
+		background: #eee;
+	}
+
+	.swal2-confirm.swal2-styled {
+		border: none !important;
+		background: $blue !important;
+		border-radius: 1px !important;
 	}
 </style>

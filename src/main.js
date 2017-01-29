@@ -3,9 +3,11 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import { routes } from './routes'
 import _ from 'Lodash'
+import VueSweetAlert from 'vue-sweetalert'
 
 Vue.use(VueRouter)
 Vue.use(_)
+Vue.use(VueSweetAlert)
 
 export const bus = new Vue({
 	methods: {
@@ -13,7 +15,6 @@ export const bus = new Vue({
 			// this.$emit('toggle_create_modal')
 		},
 		setAdmin(state) {
-			console.log(state)
 			this.$emit('is_admin', state)
 		}
 	}

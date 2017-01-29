@@ -3,18 +3,15 @@
 		<div class="item">
 			<div class="row">
 				<div class="item__image">
-					<img src="../../assets/ph3.jpg" alt="">
+					<img :src="project.image" alt="">
 				</div>
 				<div class="item-content column x-center">
 					<div class="item-tags row">
-						<span>html5</span>
-						<span>css3</span>
-						<span>Javascript</span>
-						<span>Firebase</span>
+						<span v-for="tag in project.tags">{{ tag }}</span>
 					</div>
-					<h2 class="item__header">Bacon ipsum dolor amet corned beef kielbasa ham hock, pancetta shank tri-tip spare ribs meatball brisket leberkas pork chop.</h2>
-					<p class="item__text">Landjaeger tail shankle tri-tip. Landjaeger pork chop pancetta fatback rump, sirloin cow kevin sausage swine chicken. Shankle cupim pork leberkas prosciutto jowl, fatback biltong bacon drumstick tail pastrami filet mignon.</p>
-					<button class="item__btn">View Project Here</button>
+					<h2 class="item__header">{{ project.title }}</h2>
+					<p class="item__text">{{ project.description }}</p>
+					<a :href="project.link" target="_blank" class="item__btn">View Project Here</a>
 				</div>
 			</div>
 		</div>
@@ -23,7 +20,7 @@
 
 <script>
 	export default {
-		
+		props: ['project']
 	}
 </script>
 
@@ -44,7 +41,7 @@
 		&__image {
 			width: 40%;
 			img {
-				height: 350px;
+				max-height: 350px;
 			}
 		}
 		&-content {

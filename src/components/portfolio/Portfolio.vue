@@ -42,39 +42,39 @@ a
 				{
 					image: 'dist/about.jpg',
 					title: 'First One',
+					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed illum molestias alias, deleniti incidunt eaque perferendis impedit blanditiis excepturi earum omnis in perspiciatis praesentium saepe dolores ullam voluptates nemo id.',
 					tags: ['html', 'css', 'javascript'],
-					link: 'http://google.com',
 					date: '1/27/17'
 				},
 				{
 					image: 'dist/contact.jpg',
 					title: 'Second One',
+					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo ut consectetur nemo aut optio enim qui quibusdam commodi perferendis laudantium. Reiciendis facere voluptatem id repudiandae fuga veniam est possimus facilis!',
 					tags: ['html', 'css', 'javascript'],
-					link: 'http://google.com',
 					date: '1/27/17'
 				},
 				{
 					image: 'dist/landing.png',
 					title: 'Third One',
+					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus sequi, amet dolorem necessitatibus est. Asperiores omnis autem atque eveniet deleniti, sit sapiente voluptatem id ipsum quis nam quaerat facilis. Sunt!',
 					tags: ['html', 'css', 'javascript'],
-					link: 'http://google.com',
 					date: '1/27/17'
 				},
 				{
 					image: 'dist/about_mid.jpg',
 					title: 'Forth One',
+					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente iure sit, laudantium vitae, ipsa accusamus similique perferendis incidunt nulla voluptas. Perspiciatis saepe incidunt numquam, nihil officiis dicta facilis voluptates sint.',
 					tags: ['html', 'css', 'javascript'],
-					link: 'http://google.com',
 					date: '1/27/17'
 				},
 				{
 					image: 'dist/about.jpg',
 					title: 'Fifth One',
+					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum deleniti quod corporis veritatis quaerat, ducimus, iure in eligendi molestiae quos delectus nobis illo nihil laudantium totam, architecto, quasi alias cumque.',
 					tags: ['html', 'css', 'javascript'],
-					link: 'http://google.com',
 					date: '1/27/17'
 				}
-				]
+				],
 			}
 		},
 		methods: {

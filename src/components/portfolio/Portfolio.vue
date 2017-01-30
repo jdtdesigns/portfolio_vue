@@ -25,7 +25,7 @@ a
 				<i class="fa fa-search"></i>
 			</form>
 		</div>
-		<project v-for="project in data" :project="project"></project>
+		<project v-for="project in projects" :project="project"></project>
 		<div class="row x-center">
 			<button class="view-more">View More</button>
 		</div>
@@ -39,53 +39,82 @@ a
 		data() {
 			return {
 				data: [
-				{
-					image: 'dist/about.jpg',
-					title: 'First One',
-					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed illum molestias alias, deleniti incidunt eaque perferendis impedit blanditiis excepturi earum omnis in perspiciatis praesentium saepe dolores ullam voluptates nemo id.',
-					tags: ['html', 'css', 'javascript'],
-					date: '1/27/17'
-				},
-				{
-					image: 'dist/contact.jpg',
-					title: 'Second One',
-					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo ut consectetur nemo aut optio enim qui quibusdam commodi perferendis laudantium. Reiciendis facere voluptatem id repudiandae fuga veniam est possimus facilis!',
-					tags: ['html', 'css', 'javascript'],
-					date: '1/27/17'
-				},
-				{
-					image: 'dist/landing.png',
-					title: 'Third One',
-					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus sequi, amet dolorem necessitatibus est. Asperiores omnis autem atque eveniet deleniti, sit sapiente voluptatem id ipsum quis nam quaerat facilis. Sunt!',
-					tags: ['html', 'css', 'javascript'],
-					date: '1/27/17'
-				},
-				{
-					image: 'dist/about_mid.jpg',
-					title: 'Forth One',
-					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente iure sit, laudantium vitae, ipsa accusamus similique perferendis incidunt nulla voluptas. Perspiciatis saepe incidunt numquam, nihil officiis dicta facilis voluptates sint.',
-					tags: ['html', 'css', 'javascript'],
-					date: '1/27/17'
-				},
-				{
-					image: 'dist/about.jpg',
-					title: 'Fifth One',
-					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum deleniti quod corporis veritatis quaerat, ducimus, iure in eligendi molestiae quos delectus nobis illo nihil laudantium totam, architecto, quasi alias cumque.',
-					tags: ['html', 'css', 'javascript'],
-					date: '1/27/17'
-				}
+				// {
+				// 	image: 'dist/about.jpg',
+				// 	title: 'First One',
+				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed illum molestias alias, deleniti incidunt eaque perferendis impedit blanditiis excepturi earum omnis in perspiciatis praesentium saepe dolores ullam voluptates nemo id.',
+				// 	tags: ['html', 'css', 'javascript'],
+				// 	date: '1/27/17'
+				// },
+				// {
+				// 	image: 'dist/contact.jpg',
+				// 	title: 'Second One',
+				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo ut consectetur nemo aut optio enim qui quibusdam commodi perferendis laudantium. Reiciendis facere voluptatem id repudiandae fuga veniam est possimus facilis!',
+				// 	tags: ['html', 'css', 'javascript'],
+				// 	date: '1/27/17'
+				// },
+				// {
+				// 	image: 'dist/landing.png',
+				// 	title: 'Third One',
+				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus sequi, amet dolorem necessitatibus est. Asperiores omnis autem atque eveniet deleniti, sit sapiente voluptatem id ipsum quis nam quaerat facilis. Sunt!',
+				// 	tags: ['html', 'css', 'javascript'],
+				// 	date: '1/27/17'
+				// },
+				// {
+				// 	image: 'dist/about_mid.jpg',
+				// 	title: 'Forth One',
+				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente iure sit, laudantium vitae, ipsa accusamus similique perferendis incidunt nulla voluptas. Perspiciatis saepe incidunt numquam, nihil officiis dicta facilis voluptates sint.',
+				// 	tags: ['html', 'css', 'javascript'],
+				// 	date: '1/27/17'
+				// },
+				// {
+				// 	image: 'dist/about.jpg',
+				// 	title: 'Fifth One',
+				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum deleniti quod corporis veritatis quaerat, ducimus, iure in eligendi molestiae quos delectus nobis illo nihil laudantium totam, architecto, quasi alias cumque.',
+				// 	tags: ['html', 'css', 'javascript'],
+				// 	date: '1/27/17'
+				// }
 				],
+			}
+		},
+		computed: {
+			projects() {
+				return _.orderBy(this.data, ['date_added'], ['desc'])
 			}
 		},
 		methods: {
 			getProjects() {
 				// firebase
+				const db = firebase.database(),
+							projects = db.ref('/projects'),
+							storage = firebase.storage()
+
+				projects.on('child_added', project => {
+					const sub_images = []
+
+					project = project.val()
+
+					_.map(project.images, (ref, i)  => {
+						storage.ref(ref).getDownloadURL()
+						.then(url => {
+							if ( url.match(/(main)/) )
+								project.main_image = url
+							else sub_images.push(url)	
+
+							if ( i === project.images.length - 1 )
+								this.data.push(project)
+						})
+					})
+				})
 
 			}
 		},
 		components: {
 			Project
-		}	
+		},	
+		created() {
+			this.getProjects()
+		}
 	}
 </script>
 

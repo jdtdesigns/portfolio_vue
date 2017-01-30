@@ -3,7 +3,7 @@
 		<div class="item">
 			<div class="row">
 				<div class="item__image">
-					<img :src="project.image" alt="">
+					<img :src="project.main_image" alt="">
 				</div>
 				<div class="item-content column x-center">
 					<div class="item-tags row">

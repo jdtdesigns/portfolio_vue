@@ -41,6 +41,8 @@
 </template>
 
 <script>
+	import { bus } from '../../main'
+
 	export default {
 		props: ['edit_project'],
 		data() {
@@ -140,8 +142,14 @@
 		},
 
 		created() {
+			// get image urls and add them to previews -> array with first val
+			// set to type of the image(main/sub) and second val the url
 			if ( this.edit_project ) {
-				console.log(this.edit_project)
+				this.title = this.edit_project.title
+				this.link = this.edit_project.link
+				this.description = this.edit_project.description
+				this.tags = this.edit_project.tags
+				this.images = this.edit_project.images
 			}
 		}
 	}

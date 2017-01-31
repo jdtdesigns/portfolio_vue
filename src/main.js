@@ -12,7 +12,9 @@ Vue.use(VueSweetAlert)
 export const bus = new Vue({
 	methods: {
 		editProject(project) {
-			this.$emit('edit_project', project)
+			// console.log(project)
+			this.project = project
+			this.$emit('edit_project')
 		},
 		setAdmin(state) {
 			this.$emit('is_admin', state)

@@ -49,7 +49,7 @@
 							<td>{{ project.date }}</td>
 							<td>
 								<i class="fa fa-edit"
-									@click="showModal('edit', project.key)"></i>
+									@click.stop="showModal('edit', project.key)"></i>
 								<i class="fa fa-trash"
 									@click="deleteProject(project.key)"></i>
 							</td>
@@ -104,18 +104,19 @@
 			}
 		},
 		methods: {
-			showModal(type, project) {
+			showModal(type, key) {
 				if ( !this.show_modal ) {
 					document.body.addEventListener('click', this.hideModal)
-					this.show_modal = true
 
 					if ( type == 'edit' ) {
 						const db = firebase.database()
 
 						db.ref(`projects/${key}`).once('value').then(project => {
+							// console.log(project.val())
 							this.edit_project = project.val()
+							this.show_modal = true
 						})
-					}
+					} else this.show_modal = true
 				} else this.hideModal()
 			},
 

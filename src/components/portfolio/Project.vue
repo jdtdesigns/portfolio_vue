@@ -25,6 +25,9 @@
 </script>
 
 <style lang="scss">
+	.content {
+		opacity: 0;
+	}
 	.content:nth-child(even) {
 		background: #eae9e7;
 		.item__image {

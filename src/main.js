@@ -11,8 +11,8 @@ Vue.use(VueSweetAlert)
 
 export const bus = new Vue({
 	methods: {
-		toggleCreateModal() {
-			// this.$emit('toggle_create_modal')
+		editProject(project) {
+			this.$emit('edit_project', project)
 		},
 		setAdmin(state) {
 			this.$emit('is_admin', state)

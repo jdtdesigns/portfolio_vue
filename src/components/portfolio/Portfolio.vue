@@ -18,16 +18,22 @@
 				</div>
 			</div>
 		</div>
-a
+
 		<div class="portfolio-header column y-center">
-			<form class="row y-center">
-				<input type="text" placeholder="Type a Category (ie. Vue or Laravel)">
+			<div class="filter row y-center">
+				<input type="text" placeholder="Type a Category (ie. Vue or Laravel)"
+					v-model="filter"
+					@keyup="filterProjects">
 				<i class="fa fa-search"></i>
-			</form>
+			</div>
 		</div>
-		<project v-for="project in projects" :project="project"></project>
+			<project v-for="(project, i) in filters.length ? filters : projects.length ? projects : pages[0]" 
+				:project="project"
+				:style="{animation: 'fadeIn .7s .' + i * 300 + 's forwards'}"></project>
 		<div class="row x-center">
-			<button class="view-more">View More</button>
+			<button class="view-more"
+				@click="getMore"
+				v-if="view_more_button">View More</button>
 		</div>
 	</section>
 </template>
@@ -75,20 +81,30 @@ a
 				// 	date: '1/27/17'
 				// }
 				],
+				filter: '',
+				filters: [],
+				projects: [],
+				next_page: 1,
+				view_more_button: true
 			}
 		},
 		computed: {
-			projects() {
+			sorted() {
 				return _.orderBy(this.data, ['date_added'], ['desc'])
+			},
+			pages() {
+				return _.chunk(this.sorted, 4)
 			}
 		},
 		methods: {
 			getProjects() {
-				// firebase
 				const db = firebase.database(),
 							projects = db.ref('/projects'),
-							storage = firebase.storage()
+							storage = firebase.storage(),
+							count = 0
+				projects.once('value').then(snap => {
 
+				})
 				projects.on('child_added', project => {
 					const sub_images = []
 
@@ -107,11 +123,43 @@ a
 					})
 				})
 
+			},
+
+			filterProjects() {
+				const filter = list => {
+					_.map(list, project => {
+						_.map(project.tags, tag => {
+							if ( tag.match(this.filter) )
+								this.filters.push(project)
+						})
+					})						
+				}
+
+				clearTimeout(this.runFilter)
+				this.runFilter = setTimeout(() => {
+					this.filters = []
+					if ( this.projects.length )
+						filter(this.projects)
+					else filter(this.pages[0])
+				}, 500)					
+			},
+
+			getMore() {
+				if ( !this.projects.length ) 
+					_.map(this.pages[0], project => this.projects.push(project))
+
+				_.map(this.pages[this.next_page], project => this.projects.push(project))
+
+				if ( this.pages[this.next_page + 1] ) {
+					this.next_page + 1
+					this.view_more_button = true
+				} else this.view_more_button = false
 			}
 		},
 		components: {
 			Project
 		},	
+
 		created() {
 			this.getProjects()
 		}
@@ -119,6 +167,14 @@ a
 </script>
 
 <style lang="scss">
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
 	.landing {
 		background: #ebeae8;
 		min-height: 100vh;
@@ -234,7 +290,7 @@ a
 			height: 1px;
 			background: #e9e9e9;
 		}
-		form {
+		.filter {
 			position: relative;
 			input {
 				border: 1px solid #bbb;

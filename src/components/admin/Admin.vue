@@ -2,7 +2,9 @@
 	<div class="landing admin">
 		<create-modal 
 			v-if="show_modal"
-			@close_modal="show_modal = $event"></create-modal>
+			@close_modal="show_modal = $event"
+			@open="show_modal = $event"
+			:edit_project="edit_project"></create-modal>
 		<div class="landing-text">
 			<div class="admin-panel column y-center">
 				<h1>Admin Panel</h1>
@@ -47,8 +49,9 @@
 							<td>{{ project.date }}</td>
 							<td>
 								<i class="fa fa-edit"
-									@click="editProject(project.key)"></i>
-								<i class="fa fa-trash"></i>
+									@click="showModal('edit', project.key)"></i>
+								<i class="fa fa-trash"
+									@click="deleteProject(project.key)"></i>
 							</td>
 						</tr>
 					</tbody>
@@ -75,6 +78,7 @@
 <script>
 	import CreateModal from './CreateModal.vue'
 	import Message from './Message.vue'
+	import { bus } from '../../main'
 
 	export default {
 		data() {
@@ -83,43 +87,9 @@
 				show_new_messages: true,
 				loaded: false,
 				show_messages: false,
-				data: [
-				// {
-				// 	image: 'dist/about.jpg',
-				// 	title: 'First One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed illum molestias alias, deleniti incidunt eaque perferendis impedit blanditiis excepturi earum omnis in perspiciatis praesentium saepe dolores ullam voluptates nemo id.',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// },
-				// {
-				// 	image: 'dist/contact.jpg',
-				// 	title: 'Second One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo ut consectetur nemo aut optio enim qui quibusdam commodi perferendis laudantium. Reiciendis facere voluptatem id repudiandae fuga veniam est possimus facilis!',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// },
-				// {
-				// 	image: 'dist/landing.png',
-				// 	title: 'Third One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus sequi, amet dolorem necessitatibus est. Asperiores omnis autem atque eveniet deleniti, sit sapiente voluptatem id ipsum quis nam quaerat facilis. Sunt!',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// },
-				// {
-				// 	image: 'dist/about_mid.jpg',
-				// 	title: 'Forth One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente iure sit, laudantium vitae, ipsa accusamus similique perferendis incidunt nulla voluptas. Perspiciatis saepe incidunt numquam, nihil officiis dicta facilis voluptates sint.',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// },
-				// {
-				// 	image: 'dist/about.jpg',
-				// 	title: 'Fifth One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum deleniti quod corporis veritatis quaerat, ducimus, iure in eligendi molestiae quos delectus nobis illo nihil laudantium totam, architecto, quasi alias cumque.',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// }
-				],
+				edit_project: null,
+				edit_key: '',
+				data: [],
 				message_data: []
 			}
 		},
@@ -134,10 +104,18 @@
 			}
 		},
 		methods: {
-			showModal() {
+			showModal(type, project) {
 				if ( !this.show_modal ) {
 					document.body.addEventListener('click', this.hideModal)
 					this.show_modal = true
+
+					if ( type == 'edit' ) {
+						const db = firebase.database()
+
+						db.ref(`projects/${key}`).once('value').then(project => {
+							this.edit_project = project.val()
+						})
+					}
 				} else this.hideModal()
 			},
 
@@ -186,18 +164,19 @@
 				})
 			},
 
-			editProject(key) {
-				console.log(key)
+			deleteProject(key) {
+
 			}
 		},
+
 		components: {
 			CreateModal,
 			Message
 		},
+
 		created() {
 			this.getProjects()
 			this.getMessages()
-			// console.log(this.messages)
 		}	
 	}
 </script>

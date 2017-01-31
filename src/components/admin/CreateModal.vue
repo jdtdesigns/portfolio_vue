@@ -42,6 +42,7 @@
 
 <script>
 	export default {
+		props: ['edit_project'],
 		data() {
 			return {
 				title: '',
@@ -135,6 +136,12 @@
 						}
 					})				
 				})
+			}
+		},
+
+		created() {
+			if ( this.edit_project ) {
+				console.log(this.edit_project)
 			}
 		}
 	}

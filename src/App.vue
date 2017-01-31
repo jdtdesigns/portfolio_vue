@@ -160,16 +160,33 @@ export default {
 	.right {
 		justify-content: flex-end;
 	}
-	
+	.swal2-container.swal2-in {
+		background-color: rgba(#000, .5) !important;
+	}
+
 	.swal2-modal {
 		font-family: 'Lato', sans-serif !important;
 		border-radius: 2px !important;
-		background: #eee;
+		background: #333 !important;
+		h2, .swal2-content {
+			color: #eee !important;
+		}
+		.swal2-icon:after, .swal2-icon:before {
+			background: #333 !important;
+		}
+		.swal2-icon.swal2-success .fix {
+			background: #333 !important;
+		}
 	}
 
 	.swal2-confirm.swal2-styled {
 		border: none !important;
-		background: $blue !important;
+		background: #555 !important;
 		border-radius: 1px !important;
+		padding: 10px 40px !important;
+		transition: background .3s !important;
+		&:hover {
+			background: lighten(#555, 2%) !important;
+		}
 	}
 </style>

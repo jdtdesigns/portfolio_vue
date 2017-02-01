@@ -27,10 +27,14 @@
 				<i class="fa fa-search"></i>
 			</div>
 		</div>
+			<div class="no-results row x-center" v-if="no_filter_results">
+				<h2>Sorry, No Results Found.</h2>
+			</div>
 			<project v-for="(project, i) in filters.length ? filters : projects.length ? projects : pages[0]" 
 				:project="project"
-				:style="{animation: 'fadeIn .7s .' + i * 300 + 's forwards'}"></project>
-		<div class="row x-center">
+				:style="{animation: 'fadeIn .7s .' + i * 300 + 's forwards'}"
+				v-if="!no_filter_results"></project>
+		<div class="view-more-wrap row x-center">
 			<button class="view-more"
 				@click="getMore"
 				v-if="view_more_button">View More</button>
@@ -44,45 +48,10 @@
 	export default {
 		data() {
 			return {
-				data: [
-				// {
-				// 	image: 'dist/about.jpg',
-				// 	title: 'First One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed illum molestias alias, deleniti incidunt eaque perferendis impedit blanditiis excepturi earum omnis in perspiciatis praesentium saepe dolores ullam voluptates nemo id.',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// },
-				// {
-				// 	image: 'dist/contact.jpg',
-				// 	title: 'Second One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo ut consectetur nemo aut optio enim qui quibusdam commodi perferendis laudantium. Reiciendis facere voluptatem id repudiandae fuga veniam est possimus facilis!',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// },
-				// {
-				// 	image: 'dist/landing.png',
-				// 	title: 'Third One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus sequi, amet dolorem necessitatibus est. Asperiores omnis autem atque eveniet deleniti, sit sapiente voluptatem id ipsum quis nam quaerat facilis. Sunt!',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// },
-				// {
-				// 	image: 'dist/about_mid.jpg',
-				// 	title: 'Forth One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente iure sit, laudantium vitae, ipsa accusamus similique perferendis incidunt nulla voluptas. Perspiciatis saepe incidunt numquam, nihil officiis dicta facilis voluptates sint.',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// },
-				// {
-				// 	image: 'dist/about.jpg',
-				// 	title: 'Fifth One',
-				// 	description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum deleniti quod corporis veritatis quaerat, ducimus, iure in eligendi molestiae quos delectus nobis illo nihil laudantium totam, architecto, quasi alias cumque.',
-				// 	tags: ['html', 'css', 'javascript'],
-				// 	date: '1/27/17'
-				// }
-				],
+				data: [],
 				filter: '',
 				filters: [],
+				no_filter_results: false,
 				projects: [],
 				next_page: 1,
 				view_more_button: true
@@ -102,9 +71,7 @@
 							projects = db.ref('/projects'),
 							storage = firebase.storage(),
 							count = 0
-				projects.once('value').then(snap => {
 
-				})
 				projects.on('child_added', project => {
 					const sub_images = []
 
@@ -119,6 +86,7 @@
 
 							if ( i === project.images.length - 1 )
 								this.data.push(project)
+								if ( this.data.length < 5 ) this.view_more_button = false
 						})
 					})
 				})
@@ -131,6 +99,7 @@
 						_.map(project.tags, tag => {
 							if ( tag.match(this.filter) )
 								this.filters.push(project)
+							else this.no_filter_results = true
 						})
 					})						
 				}
@@ -138,6 +107,8 @@
 				clearTimeout(this.runFilter)
 				this.runFilter = setTimeout(() => {
 					this.filters = []
+					this.no_filter_results = false
+
 					if ( this.projects.length )
 						filter(this.projects)
 					else filter(this.pages[0])
@@ -310,21 +281,30 @@
 		}
 	}
 
-	button.view-more {
-		margin: 40px 0 40px;
-		background: none;
-		font-size: 1.2em;
-		text-transform: uppercase;
-		color: #999;
-		border: 1px solid #999;
-		border-radius: 2px;
-		padding: 7px 45px;
-		cursor: pointer;
-		transition: background .3s, color .3s, border .3s;
-		&:hover {
-			background: #bbb;
-			border-color: #bbb;
-			color: #fff;
-		}
-	}	
+	.no-results {
+		margin-top: 50px;
+		font-family: 'Lato', sans-serif;
+		color: #777;
+	}
+
+	.view-more-wrap {
+		// background: #f9f9f9;
+		button.view-more {
+			margin: 40px 0 40px;
+			background: none;
+			font-size: 1.2em;
+			text-transform: uppercase;
+			color: #999;
+			border: 1px solid #999;
+			border-radius: 2px;
+			padding: 7px 45px;
+			cursor: pointer;
+			transition: background .3s, color .3s, border .3s;
+			&:hover {
+				background: #bbb;
+				border-color: #bbb;
+				color: #fff;
+			}
+		}	
+	}
 </style>

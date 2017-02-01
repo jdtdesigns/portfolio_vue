@@ -58,7 +58,7 @@
 					return
 				}
 				
-				// Try to push message
+				// Try to save message
 				const db = firebase.database(),
 							messages = db.ref('/messages'),
 							key = messages.push().key,
@@ -67,7 +67,7 @@
 				this.message.received = time
 				this.message.key = key
 				messages.child(key).set(this.message)
-				// Push succeeded
+				// Save succeeded
 				.then(() => {
 					this.message.name = ''
 					this.message.email = ''
@@ -76,11 +76,9 @@
 
 					this.$swal("Awesome!", "I'll get back with you soon!", "success")
 				})
-				// Push failed
+				// Save failed
 				.catch(err => {
-					// Fields only have 1 character
-					// this.errors.push('The name and message fields need more characters.')
-					console.log(err)
+					this.$swal("Oops!", "Something went wrong. Please try again.", "error")
 				})
 			}
 		}

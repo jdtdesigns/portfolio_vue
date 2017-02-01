@@ -1,10 +1,18 @@
 <template>
 	<div class="landing admin">
+		<message-view
+			:message="message_view"
+			v-if="message_view"
+			@closeMessage="closeMessage"
+			@deleteMessage="deleteMessage($event)"></message-view>
+
 		<create-modal 
 			v-if="show_modal"
 			@close_modal="show_modal = $event"
 			@open="show_modal = $event"
-			:edit_project="edit_project"></create-modal>
+			:edit_project="edit_project"
+			:edit_key="edit_key"></create-modal>
+
 		<div class="landing-text">
 			<div class="admin-panel column y-center">
 				<h1>Admin Panel</h1>
@@ -14,7 +22,7 @@
 					:class="{active: !show_messages}"><i class="fa fa-file-text"></i>Projects</button>
 					<button class="admin-menu-btn column y-center x-center"
 						@click="show_messages = true"
-						:class="{active: show_messages}"><i class="fa fa-envelope-o"></i>Messages</button>
+						:class="{active: show_messages, 'new-messages': new_messages}"><i class="fa fa-envelope-o"></i>Messages</button>
 				</div>
 				<button class="admin-action-btn row y-center"
 					@click.stop="showModal"
@@ -38,7 +46,10 @@
 						<th></th>
 					</thead>
 					<tbody>
-						<tr v-for="project in projects" :data-project="project.key">
+						<tr v-if="!data.length">
+							<td colspan="5" height="100">No Projects Currently.</td>
+						</tr>
+						<tr v-for="(project, i) in projects" :data-project="project.key">
 							<td>
 								<img :src="project.image">
 							</td>
@@ -51,11 +62,12 @@
 								<i class="fa fa-edit"
 									@click.stop="showModal('edit', project.key)"></i>
 								<i class="fa fa-trash"
-									@click="deleteProject(project.key)"></i>
+									@click="deleteProject(project.key, i)"></i>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+
 				<table v-if="show_messages">
 					<thead>
 						<th>Received</th>
@@ -64,7 +76,9 @@
 						<th></th>
 					</thead>
 					<tbody>
-						<message v-for="message in messages" :message="message"></message>
+						<message v-for="message in messages" 
+							:message="message"
+							@show_message="showMessage($event)"></message>
 						<tr v-if="!messages.length">
 							<td colspan="4" height="100">No Messages Currently.</td>
 						</tr>
@@ -78,6 +92,7 @@
 <script>
 	import CreateModal from './CreateModal.vue'
 	import Message from './Message.vue'
+	import MessageView from './MessageView.vue'
 	import { bus } from '../../main'
 
 	export default {
@@ -90,7 +105,9 @@
 				edit_project: null,
 				edit_key: '',
 				data: [],
-				message_data: []
+				new_messages: false,
+				message_data: [],
+				message_view: null
 			}
 		},
 		computed: {
@@ -112,9 +129,25 @@
 						const db = firebase.database()
 
 						db.ref(`projects/${key}`).once('value').then(project => {
-							// console.log(project.val())
-							this.edit_project = project.val()
-							this.show_modal = true
+							const storage = firebase.storage()
+
+							project = project.val()
+							project.image_previews = []
+
+							_.map(project.images, (image, i) => {
+								storage.ref(image).getDownloadURL()
+								.then(url => {
+									if ( image.match(/(main)/) ) 
+										project.image_previews.push(['main', url])
+									else project.image_previews.push(['sub', url])
+
+									if ( i === project.images.length - 1 ) {
+										this.edit_project = project
+										this.edit_key = key
+										this.show_modal = true
+									}
+								})
+							})							
 						})
 					} else this.show_modal = true
 				} else this.hideModal()
@@ -122,6 +155,9 @@
 
 			hideModal() {
 				this.show_modal = false
+				this.edit_project = null
+				this.edit_key = ''
+
 				document.body.removeEventListener('click', this.showModal)
 			},
 
@@ -138,19 +174,26 @@
 									added = new Date(project.date_added),
 									date = `${added.getMonth() + 1}/${added.getDate()}/${added.getFullYear()}`
 
-						_.map(project.images, ref  => {
-							if ( ref.match(/(main)/) ) {
-								storage.ref(ref).getDownloadURL()
-								.then(url => {
-									new_project.title = project.title
-									new_project.image = url
-									new_project.date = date,
-									new_project.created = project.date_added
-									new_project.key = data.key
-									new_project.tags = project.tags
+						const addToProjects = url => {
+							new_project.title = project.title
+							new_project.image = url
+							new_project.date = date,
+							new_project.created = project.date_added
+							new_project.key = data.key
+							new_project.tags = project.tags
 
-									this.data.push(new_project)
-								})
+							this.data.push(new_project)
+						} 
+
+						_.map(project.images, ref  => {
+
+							if ( ref.match(/(main)/) ) {
+								if ( !ref.match(/(firebasestorage)/) ) {
+									storage.ref(ref).getDownloadURL()
+									.then(url => {
+										addToProjects(url)
+									})	
+								} else addToProjects(ref)
 							}
 						})
 					})				
@@ -161,18 +204,75 @@
 							messages = db.ref('/messages')
 
 				messages.on('child_added', message => {
+					if ( !message.val().is_read ) this.new_messages = true
 					this.message_data.push(message.val())
 				})
 			},
 
-			deleteProject(key) {
+			deleteProject(key, index) {
+				this.$swal({
+				  title: "Are you sure?",
+				  text: "You will not be able to recover this file!",
+				  type: "warning",
+				  showCancelButton: true,
+				  confirmButtonColor: "#DD6B55",
+				  confirmButtonText: "Yes, delete it!"
+				}).then(() => {
+					const project = firebase.database().ref('/projects/' + key)
 
+					project.remove()
+
+					_.map(this.data, (project, i) => {
+						if ( key == project.key ) this.data.splice(i, 1)
+					})				
+				  this.$swal("Deleted!", "The project was deleted.", "success")
+				})
+			},
+
+			showMessage(message) {
+				const ref = firebase.database().ref('/messages/' + message.key)
+
+				ref.update({is_read: true})
+				
+				const index = this.message_data.indexOf(message)
+				this.message_data[index].is_read = true
+				this.message_view = message
+			},
+
+			closeMessage() {
+				this.message_view = null
+
+				if ( !_.find(this.message_data, {is_read: false}) )
+					this.new_messages = false
+			},
+
+			deleteMessage(message) {
+				this.$swal({
+				  title: "Are you sure?",
+				  text: "You will not be able to recover this message!",
+				  type: "warning",
+				  showCancelButton: true,
+				  confirmButtonColor: "#DD6B55",
+				  confirmButtonText: "Yes, delete it!"
+				}).then(() => {
+					const ref = firebase.database().ref('/messages/' + message.key)
+
+					this.message_view = null
+					ref.remove()
+
+					_.map(this.message_data, (m, i) => {
+						if ( message.key == m.key ) this.message_data.splice(i, 1)
+					})
+
+				  this.$swal("Success!", "The message was deleted.", "success")
+				})
 			}
 		},
 
 		components: {
 			CreateModal,
-			Message
+			Message,
+			MessageView
 		},
 
 		created() {
@@ -186,6 +286,7 @@
 	.admin {
 		background: #444;
 		min-height: 110vh;
+		padding-bottom: 100px;
 		h1 {
 			color: #ddd;
 			font-weight: 300;
@@ -206,6 +307,7 @@
 			padding-bottom: 3px;
 			margin: 0 8px;
 			transition: background .3s, color .3s;
+			user-select: none;
 			&:hover, &.active {
 				background: #dedede;
 				color: #333;
@@ -238,6 +340,7 @@
 			color: #eee;
 			font-size: .95em;
 			transition: background .3s, color .3s;
+			user-select: none;
 			&:hover, &.active {
 				background: #eee;
 				color: #333;
@@ -302,6 +405,7 @@
 							padding: 4px 10px;
 							color: #eee;
 							transition: background .3s, color .3s;
+							user-select: none;
 							&:hover {
 								background: #eee;
 								color: #333;

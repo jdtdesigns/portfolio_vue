@@ -1,7 +1,7 @@
 <template>
 	<div class="create-modal column y-center">
 		<form class="column" @click.stop>
-			<h1>Create Project</h1>
+			<h1 v-text="edit_project ? 'Edit Project' : 'Create Project'"></h1>
 			<input type="text" v-model="title" placeholder="Title" required>
 			<input type="text" v-model="link" placeholder="Preview Url" required>
 			<textarea v-model="description" placeholder="Description" required></textarea>
@@ -35,7 +35,8 @@
 				@change="addImage('sub', $event)">
 			<button class="submit-btn" 
 				type="submit"
-				@click.prevent="addProject">Save</button>
+				@click.prevent="addProject"
+				v-text="edit_project ? 'Update' : 'Save'">Save</button>
 		</form>
 	</div>
 </template>
@@ -44,7 +45,7 @@
 	import { bus } from '../../main'
 
 	export default {
-		props: ['edit_project'],
+		props: ['edit_project', 'edit_key'],
 		data() {
 			return {
 				title: '',
@@ -106,38 +107,64 @@
 				this.$emit('close_modal', false)
 
 				const db = firebase.database(),
-							projects = db.ref('projects/'),
-							key = projects.push().key
+							projects = db.ref('projects/')
+							
+				let key
+
+				if ( this.edit_project )
+					key = this.edit_key
+				else key = projects.push().key
 
 				let project = {
 					title: this.title,
 					link: this.link,
 					description: this.description,
 					tags: this.tags,
-					images: [],
-					date_added: new Date().getTime()
+					images: []
+				}
+
+				if ( !this.edit_project ) {
+					project.date_added = new Date().getTime()
+					project.last_updated = project.date_added
+				} else {
+					project.date_added = edit_project.date_added
+					project.last_updated = new Date().getTime()
 				}
 
 				_.map(this.images, (image, i) => {
-					let image_ref = firebase.storage().ref()
-						.child(`images/${key}/${image[0]}`)
+					if ( typeof image[1] == 'object' ) {
+						let image_ref = firebase.storage().ref()
+							.child(`images/${key}/${image[0]}`)
 
-					// Save image in storage then push the full path
-					// to the project object
-					image_ref.put(image[1]).then(snapshot => {
-						project.images.push(image_ref.fullPath)
+						image_ref.put(image[1]).then(snapshot => {
+							project.images.push(image_ref.fullPath)
+
+							if ( i === this.images.length - 1 ) {
+								projects.child(key).set(project)
+
+								this.$swal("Success!", "The project has been saved.", "success")
+								this.resetData()
+							}
+						})				
+					} else {
+						project.images.push(image[1])
 
 						if ( i === this.images.length - 1 ) {
 							projects.child(key).set(project)
 
-							this.title = ''
-							this.description = ''
-							this.tags = []
-							this.images = []
-							this.image_previews = []
+							this.$swal("Success!", "The project has been edited.", "success")
+							this.resetData()
 						}
-					})				
+					}					
 				})
+			},
+
+			resetData() {
+				this.title = ''
+				this.description = ''
+				this.tags = []
+				this.images = []
+				this.image_previews = []
 			}
 		},
 
@@ -145,11 +172,18 @@
 			// get image urls and add them to previews -> array with first val
 			// set to type of the image(main/sub) and second val the url
 			if ( this.edit_project ) {
+				console.log('yep')
 				this.title = this.edit_project.title
 				this.link = this.edit_project.link
 				this.description = this.edit_project.description
 				this.tags = this.edit_project.tags
-				this.images = this.edit_project.images
+				_.map(this.edit_project.image_previews, image => {
+					if ( image[0] == 'main' )
+						this.has_main_image = true
+
+					this.images.push(image)
+					this.image_previews.push(image)
+				})
 			}
 		}
 	}
@@ -170,7 +204,7 @@
 			left: 0;
 			width: 100%;
 			height: 110vh;
-			background: rgba(#000, .5);
+			background: rgba(#000, .45);
 			z-index: -1;
 		}
 		h1, span, form input, form textarea, button, label {
@@ -181,7 +215,7 @@
 			text-align: center;
 		}
 		form {
-			background: #555;
+			background: #606060;
 			padding: 20px;
 			color: #eee;
 			input, textarea {

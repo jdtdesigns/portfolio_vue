@@ -1,0 +1,230 @@
+<template>
+	<div class="top-bar">
+		<header class="row split y-center" 
+			:class="headerClasses">
+			<i class="fa fa-navicon"></i>
+			<nav class="row">	
+				<router-link to="/" active-class="active" exact>Portfolio</router-link>
+				<router-link to="/about" active-class="active">About</router-link>
+				<router-link to="/contact" active-class="active">Contact</router-link>
+				<router-link 
+					to="/admin" 
+					active-class="active"
+					v-if="is_admin">Admin</router-link>
+			</nav>
+		</header>
+		<div class="mobile-nav column y-center">
+			<i class="fa fa-times-circle"></i>
+			<div class="nav-logo column y-center">
+				<h3>JD Tadlock</h3>
+				<h4>Fullstack Developer</h4>
+			</div>
+			<router-link to="/" active-class="active" exact>Portfolio</router-link>
+			<router-link to="/about" active-class="active">About</router-link>
+			<router-link to="/contact" active-class="active">Contact</router-link>
+			<router-link 
+				to="/admin" 
+				active-class="active"
+				v-if="is_admin">Admin</router-link>
+		</div>
+	</div>
+</template>
+
+<script>
+	// import { bus } from '../main'
+
+	export default {
+		data() {
+			return {
+				topBarPos: 0,
+				set_scroll_class: false,
+				is_admin: false
+			}
+		},
+		computed: {
+			headerClasses() {
+				return {
+					scroll: this.set_scroll_class,
+					about: this.$route.path == '/about' || this.$route.path == '/admin',
+					'contact-header': this.$route.path == '/contact'
+				}
+			}
+		},
+		methods: {
+			setScrollStyles(e) {
+				var y = e.target.scrollingElement.scrollTop
+
+				if ( y > 60 ) 
+					this.set_scroll_class = true 
+				else this.set_scroll_class = false 
+			}
+		},
+		mounted() {
+			window.addEventListener('scroll', this.setScrollStyles)
+		},
+		created() {
+			const auth = firebase.auth()
+
+			auth.onAuthStateChanged(user => {
+				if ( user ) {
+					const id = user.uid
+
+					firebase.database().ref('/admins/' + id)
+					.once('value').then(data => {
+						if ( data.val() )
+							this.is_admin = true
+					})
+				}
+			})
+		}
+	}
+</script>
+
+<style lang="scss">
+	@import './scss/animations';
+	@import './scss/mixins';
+
+	header {
+		position: fixed;
+		top:0;
+		left: 0;
+		z-index: 500;
+		width: 100%;
+		padding: 0 8%;
+		height: 60px;
+		transition: all .8s;
+		user-select: none;
+		&.about {
+			.logo h3 {
+				color: #aaa;
+			}
+			a {
+				color: #aaa;
+				&.active {
+					color: #ddd;
+				}
+			}
+		}
+		&.contact-header {
+			a {
+				color: #eee;
+				&.active {
+					color: #fff;
+					&:after {
+						background: #fff;
+					}
+				}
+			}
+		}
+		&.scroll {
+			background: #f8f8f8;
+			transform: translate3d(0, 0, 0);
+			box-shadow: 0 0 10px rgba(#000, .1);
+			height: 50px;
+			@media (min-width: 768px) {
+				top: -6px;
+				a {
+					color: #999 !important;
+					&:after {
+						background: #999;
+					}
+				}
+			}
+			.logo h3 {
+				opacity: 1;
+				visibility: visible;
+			}
+		}
+		.fa-navicon {
+			display: none;
+			@include size(medium) {
+				display: block;
+			}
+		}
+		.logo h3 {
+			text-transform: uppercase;
+			font-family: 'Lato', sans-serif;
+			font-weight: 300;
+			font-size: 1.1em;
+			color: #777;
+			letter-spacing: .02em;
+			position: relative;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity .8s, visibility .8s;
+			&:after {
+				content: '';
+				position: absolute;
+				bottom: -3px;
+				left: 0;
+				width: 100%;
+				height: 1px;
+				background: #999;
+			}
+		}
+		nav {
+			a {
+				@include nav_link;
+			}
+		}		
+		&.contact-header a:after {
+			background: #eee;
+		}
+		&.scroll.contact-header a:after {
+			background: #999;
+		}
+	}
+	.mobile-nav {
+		position: fixed;
+		left: 0;
+		top: 0;
+		z-index: 600;
+		padding: 80px 0 0;
+		width: 100%;
+		height: 100vh;
+		flex-direction: column;
+		align-items: center;
+		background: rgba(#333, .98);
+		.fa-times-circle {
+			display: none;
+			position: absolute;
+			right: 35px;
+			top: 35px;
+			font-size: 1.5em;
+			color: #ddd;
+			cursor: pointer;
+			@include size(medium) {
+				display: block;
+			}
+		}
+		.nav-logo {
+			font-family: 'Lato', sans-serif;
+			margin-bottom: 30px;
+			h3, h4 {
+				font-weight: 300;					
+			}
+			h3 {
+				font-size: 1.7em;
+				color: #dadada;
+				position: relative;
+				margin-bottom: 5px;
+				&:after {
+					content: '';
+					position: absolute;
+					bottom: -2px;
+					left: 0;
+					width: 100%;
+					height: 2px;
+					background: #999;
+				}
+			}
+			h4 {
+				color: #aaa;
+			}
+		}
+		a {
+			
+			@include nav_link;
+		}
+	}
+</style>

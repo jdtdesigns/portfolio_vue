@@ -54,8 +54,21 @@
 			@include size(medium) {
 				width: 45%;
 			}
+			@media (max-width: 700px) {
+				width: 70%;
+				margin-bottom: 30px;
+			}
+			@include size(small) {
+				width: 90%;
+			} 
 			img {
 				max-height: 350px;
+			}
+		}
+		@media (max-width: 700px) {
+			& > div {
+				flex-direction: column;
+				align-items: center;
 			}
 		}
 		&-content {
@@ -64,6 +77,10 @@
 			@include size(medium) {
 				width: 55%;
 				padding-left: 50px;
+			}
+			@media (max-width: 700px) {
+				width: 95%;
+				padding-left: 0;
 			}
 			@include size(small) {
 				padding-left: 15px;

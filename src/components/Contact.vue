@@ -1,6 +1,7 @@
 <template>
 	<div id="contact">
-		<div class="landing contact column y-center">
+		<div class="landing contact column y-center"
+			:style="{'min-height': window_height}">
 			<div class="landing-text">
 				<form class="contact-form column">
 					<h1 class="landing__header">Contact Me</h1>
@@ -38,6 +39,11 @@
 					key: ''
 				},
 				errors: []
+			}
+		},
+		computed: {
+			window_height() {
+				return window.innerWidth < 768 ? window.innerHeight + 'px' : '100vh'
 			}
 		},
 		methods: {
@@ -90,6 +96,7 @@
 </script>
 
 <style lang="scss">
+	@import './scss/mixins';
 	.contact {
 		padding-top: 2vh;
 		background: url(../assets/contact.jpg) no-repeat;
@@ -113,7 +120,7 @@
 			top: 0;
 			left: 0;
 			width: 100%;
-			height: 100vh;
+			height: 100%;
 			background: rgba(#000, .5);
 			z-index: 1;
 		}
@@ -123,12 +130,24 @@
 			background: rgba(#333, .6);
 			padding: 35px 25px 40px;
 			border-radius: 1px;
+			@include size(medium) {
+				width: 100%;
+			}
+			@include size(small) {
+				padding: 25px 18px 30px;
+			}
 			.landing__header {
 				font-size: 3.4em;
 				z-index: 5;
 				color: #fff;
 				align-self: flex-start;
 				margin: 0 auto 15px;
+				@include size(medium) {
+					font-size: 2.8em;
+				}
+				@media (max-width: 400px) {
+					font-size: 2.2em;
+				}
 				&:after {
 					background: #fff;
 				}
@@ -139,6 +158,12 @@
 				font-family: 'Lato', sans-serif;
 				font-weight: 300;
 				margin-bottom: 25px;
+				@include size(medium) {
+					font-size: 1.1em;
+				}
+				@media (max-width: 400px) {
+					font-size: .95em;
+				}
 			}
 			ul.errors {
 				text-align: center;
@@ -157,6 +182,13 @@
 				font-weight: 300;
 				border-radius: 1px;
 				min-width: 450px;
+				@include size(medium) {
+					min-width: 95%;
+				}
+				@media (max-width: 500px) {
+					font-size: 1.1em;
+					padding: 8px 9px;
+				}
 			}
 		}
 	}

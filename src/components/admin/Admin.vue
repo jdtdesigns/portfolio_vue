@@ -1,5 +1,6 @@
 <template>
-	<div class="landing admin">
+	<div class="landing admin"
+		:style="{'min-height': window_height}">
 		<message-view
 			:message="message_view"
 			v-if="message_view"
@@ -121,6 +122,9 @@
 				return _.orderBy(_.filter(this.message_data, message => {
 					return this.show_new_messages ? !message.is_read : message.is_read
 				}), ['received'], ['desc'])
+			},
+			window_height() {
+				return window.innerWidth < 768 ? window.innerHeight + 'px' : '110vh'
 			}
 		},
 		methods: {
@@ -293,7 +297,6 @@
 <style lang="scss">
 	.admin {
 		background: #444;
-		min-height: 110vh;
 		padding-bottom: 100px;
 		h1 {
 			color: #ddd;

@@ -33,17 +33,32 @@
 </script>
 
 <style lang="scss">
+	@import './scss/mixins';
+
 	footer {
 		.footer-top {
 			padding: 100px 10%;
 			background: rgba(0, 0, 0, .05);
 			color: #444;
+			@include size(medium) {
+				padding: 70px 5%;
+			}
+			@include size(small) {
+				padding: 50px 5%;
+			}
 			.footer__header {
 				font-family: 'Lora', serif;
 				font-weight: 400;
 				font-style: italic; 
 				margin-bottom: 60px;
 				position: relative;
+				@include size(medium) {
+					font-size: 1.5em;
+				}
+				@include size(small) {
+					font-size: 1.2em;
+					margin-bottom: 40px;
+				}
 				&:after {
 					content: '';
 					position: absolute;
@@ -59,6 +74,9 @@
 				font-size: 1.2em;
 				color: #333;
 				font-family: 'Lato', sans-serif;
+				@include size(medium) {
+					font-size: 1em;
+				}
 				&:not(:last-child) {
 					margin-bottom: 15px;
 				}
@@ -77,9 +95,28 @@
 			text-transform: uppercase;
 			font-size: .9em;
 			color: #7a7a7a;
+			@include size(medium) {
+				font-size: .8em;
+				padding: 15px 5%;
+			}
+			@media (max-width: 700px) {
+				flex-direction: column;
+				text-align: center;
+				span {
+					margin-bottom: 10px;
+				}
+			}
+			span:first-child {
+				@include size(medium) {
+					// font-size: .9em;
+				}
+			}
 			.footer-info {
 				span:first-child {
 					margin-bottom: 4px;
+					@include size(medium) {
+						// font-size: .9em;
+					}
 				}
 				a {
 					color: #999;

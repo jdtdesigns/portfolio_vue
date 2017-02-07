@@ -2,7 +2,11 @@
 	<div class="top-bar">
 		<header class="row split y-center" 
 			:class="headerClasses">
-			<i class="fa fa-navicon"></i>
+			<router-link to="/" class="logo">
+				<h3>JD Tadlock</h3>
+			</router-link>
+			<i class="fa fa-navicon"
+				@click="show_mobile_nav = !show_mobile_nav"></i>
 			<nav class="row">	
 				<router-link to="/" active-class="active" exact>Portfolio</router-link>
 				<router-link to="/about" active-class="active">About</router-link>
@@ -13,8 +17,10 @@
 					v-if="is_admin">Admin</router-link>
 			</nav>
 		</header>
-		<div class="mobile-nav column y-center">
-			<i class="fa fa-times-circle"></i>
+		<div class="mobile-nav column y-center"
+			:class="{show: show_mobile_nav}">
+			<i class="fa fa-times-circle"
+				@click="show_mobile_nav = false"></i>
 			<div class="nav-logo column y-center">
 				<h3>JD Tadlock</h3>
 				<h4>Fullstack Developer</h4>
@@ -31,14 +37,15 @@
 </template>
 
 <script>
-	// import { bus } from '../main'
+	import { bus } from '../main'
 
 	export default {
 		data() {
 			return {
 				topBarPos: 0,
 				set_scroll_class: false,
-				is_admin: false
+				is_admin: false,
+				show_mobile_nav: false
 			}
 		},
 		computed: {
@@ -54,9 +61,12 @@
 			setScrollStyles(e) {
 				var y = e.target.scrollingElement.scrollTop
 
-				if ( y > 60 ) 
+				if ( y > 30 ) 
 					this.set_scroll_class = true 
 				else this.set_scroll_class = false 
+			},
+			closeMobileNav() {
+				this.show_mobile_nav = false
 			}
 		},
 		mounted() {
@@ -64,7 +74,6 @@
 		},
 		created() {
 			const auth = firebase.auth()
-
 			auth.onAuthStateChanged(user => {
 				if ( user ) {
 					const id = user.uid
@@ -76,6 +85,9 @@
 					})
 				}
 			})
+
+			bus.$on('route_changed', () => this.show_mobile_nav = false)
+			window.onresize = () => this.show_mobile_nav = false
 		}
 	}
 </script>
@@ -104,6 +116,9 @@
 					color: #ddd;
 				}
 			}
+			.fa-navicon {
+				color: #ddd;
+			}
 		}
 		&.contact-header {
 			a {
@@ -114,6 +129,9 @@
 						background: #fff;
 					}
 				}
+			}
+			.fa-navicon {
+				color: #ddd;
 			}
 		}
 		&.scroll {
@@ -134,9 +152,16 @@
 				opacity: 1;
 				visibility: visible;
 			}
+			.fa-navicon {
+				color: #444;
+			}
 		}
 		.fa-navicon {
 			display: none;
+			font-size: 1.3em;
+			color: #444;
+			cursor: pointer;
+			user-select: none;
 			@include size(medium) {
 				display: block;
 			}
@@ -163,6 +188,11 @@
 			}
 		}
 		nav {
+			&.row {
+				@include size(medium) {
+					display: none;
+				}
+			}
 			a {
 				@include nav_link;
 			}
@@ -176,7 +206,6 @@
 	}
 	.mobile-nav {
 		position: fixed;
-		display: none;
 		left: 0;
 		top: 0;
 		z-index: 600;
@@ -185,12 +214,19 @@
 		height: 100%;
 		flex-direction: column;
 		align-items: center;
-		background: rgba(#333, .98);
+		background: rgba(#333, .99);
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity .4s, visibility .4s;
+		&.show {
+			opacity: 1;
+			visibility: visible;
+		}
 		.fa-times-circle {
 			display: none;
 			position: absolute;
 			right: 35px;
-			top: 35px;
+			top: 20px;
 			font-size: 1.5em;
 			color: #ddd;
 			cursor: pointer;

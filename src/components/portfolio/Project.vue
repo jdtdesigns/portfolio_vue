@@ -25,6 +25,8 @@
 </script>
 
 <style lang="scss">
+	@import '../scss/mixins';
+
 	.content {
 		opacity: 0;
 	}
@@ -36,13 +38,22 @@
 		.item-content {
 			order: 1;
 			padding: 0 70px 0 0;
+			@include size(medium) {
+				padding: 0 20px 0 0;
+			}
 		}
 	}
 	.item {
 		padding: 70px 10%;
 		flex-wrap: wrap;
+		@include size(medium) {
+			padding: 60px 4%;
+		}
 		&__image {
 			width: 40%;
+			@include size(medium) {
+				width: 45%;
+			}
 			img {
 				max-height: 350px;
 			}
@@ -50,12 +61,25 @@
 		&-content {
 			width: 60%;
 			padding-left: 70px;
+			@include size(medium) {
+				width: 55%;
+				padding-left: 50px;
+			}
+			@include size(small) {
+				padding-left: 15px;
+			}
 			.item-tags {
 				margin-bottom: 15px;
 				span {
 					margin-right: 20px;
 					font-family: 'Lato', sans-serif;
 					position: relative;
+					@include size(medium) {
+						font-size: .9em;
+					}
+					@include size(small) {
+						margin-right: 10px;
+					}
 					&:not(:last-child):after {
 						content: '';
 						position: absolute;
@@ -74,12 +98,25 @@
 				font-size: 1.7em;
 				line-height: 1.3;
 				margin-bottom: 20px;
+				@include size(medium) {
+					font-size: 1.3em;
+				}
+				@include size(small) {
+					line-height: 1.1;
+					margin-bottom: 13px;
+				}
 			}
 			.item__text {
 				font-family: 'Lato', sans-serif;
 				font-size: .95em;
 				line-height: 1.9;
 				margin-bottom: 23px;
+				@include size(medium) {
+					font-size: .9em;
+				}
+				@include size(small) {
+					font-size: .85em;
+				}
 			}
 			.item__btn {
 				background: none;
@@ -91,6 +128,12 @@
 				padding-bottom: 2px;
 				display: inline-block;
 				align-self: flex-start;
+				@include size(medium) {
+					font-size: 1em;
+				}
+				@include size(small) {
+					font-size: .9em;
+				}
 			}
 		}
 	}

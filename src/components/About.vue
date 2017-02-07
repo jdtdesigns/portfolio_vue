@@ -1,6 +1,7 @@
 <template>
 	<div id="about">
-		<div class="landing about column">
+		<div class="landing about column"
+			:style="{'min-height': window_height}">
 			<div class="landing-text column">
 				<div class="row">
 					<h1 class="landing__header">About</h1>
@@ -30,7 +31,8 @@
 			</div>
 		</div>
 
-		<div class="code column y-center">
+		<div class="code column y-center"
+			:style="{'min-height': window_height}">
 			<h1 class="code__header">Code the world</h1>
 		</div>
 	</div>
@@ -40,11 +42,18 @@
 	export default {
 		created() {
 			window.scroll(0, 0)
+		},
+		computed: {
+			window_height() {
+				return window.innerWidth < 768 ? window.innerHeight + 'px' : '100vh'
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
+	@import './scss/mixins';
+
 	.landing.about {
 		background: url(../assets/about.jpg) no-repeat;
 		background-size: cover;
@@ -65,10 +74,15 @@
 			}
 		}
 	}
-
 	.story {
 		padding: 100px 10%;
 		color: #444;
+		@include size(medium) {
+			padding: 80px 7%;
+		}
+		@include size(small) {
+			padding: 80px 5%;
+		}
 		&__header {
 			font-family: 'Lato', sans-serif;
 			text-transform: uppercase; 
@@ -82,10 +96,16 @@
 			margin-bottom: 15px;
 		}
 		&-text {
+			@include size(medium) {
+				flex-direction: column;
+			}
 			& > .column {
 				flex: 1;
 				&:first-child {
 					margin-right: 35px;
+					@include size(medium) {
+						margin-right: 0;
+					}
 				}
 			}
 			p {
@@ -93,12 +113,13 @@
 				margin-bottom: 10px;
 				font-family: 'Lato', sans-serif;
 				font-size: .96em;
+				@include size(medium) {
+					line-height: 1.8;
+				}
 			}
 		}
 	}
-
 	.code {
-		min-height: 100vh;
 		background: url(../assets/about_mid.jpg) no-repeat;
 		background-size: cover;
 		background-position: top center;
@@ -110,6 +131,9 @@
 			font-size: 3.3em;
 			position: relative;
 			color: #fff;
+			@media (max-width: 500px) {
+				font-size: 2.5em;
+			}
 			&:after {
 				content: '';
 				position: absolute;

@@ -56,6 +56,7 @@ export default {
 
 <style lang="scss">
 	@import './components/scss/variables';
+	@import './components/scss/mixins';
 
 	* {
 		padding: 0;
@@ -69,6 +70,7 @@ export default {
 
 	body {
 		overflow-x: hidden;
+		min-width: 320px;
 	}
 
 	img {
@@ -95,6 +97,10 @@ export default {
 		border-radius: 1px;
 		margin-top: 5px;
 		transition: background .3s;
+		@include size(medium) {
+			font-size: 1.075em;
+			padding: 9px 0 9px;
+		}
 		&:hover {
 			background: darken(#5293cf, 3%);
 		}

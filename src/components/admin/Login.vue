@@ -1,12 +1,13 @@
 <template>
-	<div class="login-form column y-center">
+	<div class="login-form column y-center"
+		:style="{'min-height': window_height}">
 		<form class="column">
 			<h1>Login</h1>
 			<span>{{ error }}</span>
 			<input type="text" v-model="email" placeholder="Email">
 			<input type="password" v-model="password" placeholder="Password">
 			<button type="submit"
-				@click.stop="login">Login</button>
+				@click.prevent="login">Login</button>
 		</form>
 	</div>
 </template>
@@ -18,6 +19,11 @@
 				email: '',
 				password: '',
 				error: ''
+			}
+		},
+		computed: {
+			window_height() {
+				return window.innerWidth < 768 ? window.innerHeight + 'px' : '100vh'
 			}
 		},
 		methods: {
@@ -36,8 +42,8 @@
 
 <style lang="scss">
 	.login-form {
-		min-height: 100vh;
 		padding-top: 150px;
+		background: #e2e2e2;
 		form {
 			background: #bbb;
 			padding: 25px;

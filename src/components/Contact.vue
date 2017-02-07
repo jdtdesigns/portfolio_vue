@@ -1,5 +1,7 @@
 <template>
 	<div id="contact">
+		<div class="overlay"
+			:style="{'min-height': window_height}"></div>
 		<div class="landing contact column y-center"
 			:style="{'min-height': window_height}">
 			<div class="landing-text">
@@ -98,6 +100,15 @@
 
 <style lang="scss">
 	@import './scss/mixins';
+	.overlay {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		background: rgba(#000, .5);
+		z-index: 1;
+	}
 	.contact {
 		padding-top: 2vh;
 		background: url(../assets/contact.jpg) no-repeat;
@@ -114,16 +125,6 @@
 		}
 		:-ms-input-placeholder {  
 		   color: #333;  
-		}
-		&:after {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: rgba(#000, .5);
-			z-index: 1;
 		}
 		form.contact-form {
 			position: relative;

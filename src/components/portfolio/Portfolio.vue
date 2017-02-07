@@ -99,10 +99,12 @@
 			},
 
 			filterProjects() {
+				this.filters = []
 				const filter = list => {
 					_.map(list, project => {
 						_.map(project.tags, tag => {
-							if ( tag.toLowerCase().match(this.filter.toLowerCase()) ) {
+							if ( tag.toLowerCase().match(this.filter.toLowerCase())
+								&& this.filter.length ) {
 								this.filters.push(project)
 							}
 						})
@@ -111,14 +113,18 @@
 
 				clearTimeout(this.runFilter)
 				this.runFilter = setTimeout(() => {
-					this.filters = []
+					
 					this.no_filter_results = false
 
 					if ( this.projects.length ) 
 						filter(this.projects)
 					else filter(this.pages[0]); 
 
-					if ( !this.filters.length ) this.no_filter_results = true	
+					if ( !this.filters.length ) {
+						if ( this.filter.length )
+							this.no_filter_results = true
+						else this.no_filter_results = false
+					}	
 				}, 500)					
 			},
 

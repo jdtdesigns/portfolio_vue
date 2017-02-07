@@ -369,6 +369,7 @@
 		margin-top: 50px;
 		font-family: 'Lato', sans-serif;
 		color: #777;
+		padding: 20px 0 100px;
 	}
 
 	.view-more-wrap {

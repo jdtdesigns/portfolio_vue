@@ -290,6 +290,7 @@
 			window.scroll(0, 0)
 			this.getProjects()
 			this.getMessages()
+			document.title = 'JD Tadlock | Admin'
 		}	
 	}
 </script>

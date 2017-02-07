@@ -91,6 +91,7 @@
 
 		created() {
 			window.scroll(0, 0)
+			document.title = 'JD Tadlock | Contact'
 		}
 	}
 </script>

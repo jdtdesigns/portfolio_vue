@@ -36,6 +36,9 @@
 					this.$router.push('/admin')
 				}, error => this.error = 'There was an error. Try again.')
 			}
+		},
+		created() {
+			document.title = 'JD Tadlock | Login'
 		}
 	}
 </script>

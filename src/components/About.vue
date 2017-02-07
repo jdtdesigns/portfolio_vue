@@ -40,14 +40,15 @@
 
 <script>
 	export default {
-		created() {
-			window.scroll(0, 0)
-		},
 		computed: {
 			window_height() {
 				return window.innerWidth < 768 ? window.innerHeight + 'px' : '100vh'
 			}
-		}
+		},
+		created() {
+			window.scroll(0, 0)
+			document.title = 'JD Tadlock | About'
+		},
 	}
 </script>
 

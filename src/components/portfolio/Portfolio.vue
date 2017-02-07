@@ -152,6 +152,7 @@
 			// this.base_height = window.innerHeight
 			// window.addEventListener('resize', this.setHeight)
 			// this.window_height = window.innerHeight + 'px'
+			document.title = 'JD Tadlock | Portfolio'
 			this.getProjects()
 		}
 	}

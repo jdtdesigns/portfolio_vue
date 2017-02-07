@@ -4,8 +4,6 @@
 			:style="{'min-height': window_height}">
 			<div class="landing-text column y-center">
 				<h1 class="landing__header">JD Tadlock</h1>
-				<!-- {{ base_height }}
-				{{ window_height }} -->
 				<h2 class="landing__sub-header">Fullstack Developer</h2>
 				<div class="landing-featured row">
 					<span>Strategy</span>
@@ -33,7 +31,8 @@
 			<div class="no-results row x-center" v-if="no_filter_results">
 				<h2>Sorry, No Results Found.</h2>
 			</div>
-			<project v-for="(project, i) in filters.length ? filters : projects.length ? projects : pages[0]" 
+			<project 
+				v-for="(project, i) in filters.length ? filters : projects.length ? projects : pages[0]" 
 				:project="project"
 				:style="{animation: 'fadeIn .7s .' + i * 300 + 's forwards'}"
 				v-if="!no_filter_results"></project>
@@ -103,9 +102,9 @@
 				const filter = list => {
 					_.map(list, project => {
 						_.map(project.tags, tag => {
-							if ( tag.match(this.filter) )
+							if ( tag.toLowerCase().match(this.filter.toLowerCase()) ) {
 								this.filters.push(project)
-							else this.no_filter_results = true
+							}
 						})
 					})						
 				}
@@ -115,9 +114,11 @@
 					this.filters = []
 					this.no_filter_results = false
 
-					if ( this.projects.length )
+					if ( this.projects.length ) 
 						filter(this.projects)
-					else filter(this.pages[0])
+					else filter(this.pages[0]); 
+
+					if ( !this.filters.length ) this.no_filter_results = true	
 				}, 500)					
 			},
 
@@ -135,7 +136,6 @@
 
 			setHeight() {
 				if ( window.innerWidth < 768 ) {
-					// console.log('fired')
 					this.window_height = 400 + 'px'
 				}
 				
@@ -146,12 +146,6 @@
 		},	
 
 		created() {
-			// window.scroll(0, 0)
-			// this.height = window.innerHeight + 'px'
-			// window.addEventListener('resize', this.setHeight)
-			// this.base_height = window.innerHeight
-			// window.addEventListener('resize', this.setHeight)
-			// this.window_height = window.innerHeight + 'px'
 			document.title = 'JD Tadlock | Portfolio'
 			this.getProjects()
 		}
@@ -171,9 +165,7 @@
 	}
 	.landing {
 		background: #ebeae8;
-		// min-height: 100vh;
 		color: #444;
-		// transition: min-height .4s;
 		&-text {
 			padding-top: 13vh;
 		}
@@ -369,11 +361,10 @@
 		margin-top: 50px;
 		font-family: 'Lato', sans-serif;
 		color: #777;
-		padding: 20px 0 100px;
+		padding: 50px 0 100px;
 	}
 
 	.view-more-wrap {
-		// background: #f9f9f9;
 		button.view-more {
 			margin: 40px 0 40px;
 			background: none;

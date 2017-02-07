@@ -218,6 +218,7 @@
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity .4s, visibility .4s;
+		user-select: none;
 		&.show {
 			opacity: 1;
 			visibility: visible;

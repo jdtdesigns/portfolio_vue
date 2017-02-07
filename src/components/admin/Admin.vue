@@ -196,7 +196,7 @@
 
 							if ( ref.match(/(main)/) ) {
 								if ( !ref.match(/(firebasestorage)/) ) {
-									storage.ref(ref).getDownloadURL()
+									storage.refFromURL(ref).getDownloadURL()
 									.then(url => {
 										addToProjects(url)
 									})	

@@ -176,12 +176,13 @@
 	}
 	.mobile-nav {
 		position: fixed;
+		display: none;
 		left: 0;
 		top: 0;
 		z-index: 600;
 		padding: 80px 0 0;
 		width: 100%;
-		height: 100vh;
+		height: 100%;
 		flex-direction: column;
 		align-items: center;
 		background: rgba(#333, .98);
@@ -223,7 +224,6 @@
 			}
 		}
 		a {
-			
 			@include nav_link;
 		}
 	}

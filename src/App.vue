@@ -64,7 +64,7 @@ export default {
 	}
 
 	html, body {
-		min-height: 100vh;
+		min-height: 100%;
 	}
 
 	body {

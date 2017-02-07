@@ -84,7 +84,7 @@
 					project = project.val()
 
 					_.map(project.images, (ref, i)  => {
-						storage.ref(ref).getDownloadURL()
+						storage.refFromURL(ref).getDownloadURL()
 						.then(url => {
 							if ( url.match(/(main)/) )
 								project.main_image = url

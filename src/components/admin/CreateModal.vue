@@ -124,10 +124,11 @@
 				}
 
 				if ( !this.edit_project ) {
+					console.log('fired')
 					project.date_added = new Date().getTime()
 					project.last_updated = project.date_added
 				} else {
-					project.date_added = edit_project.date_added
+					project.date_added = this.edit_project.date_added
 					project.last_updated = new Date().getTime()
 				}
 
@@ -172,7 +173,6 @@
 			// get image urls and add them to previews -> array with first val
 			// set to type of the image(main/sub) and second val the url
 			if ( this.edit_project ) {
-				console.log('yep')
 				this.title = this.edit_project.title
 				this.link = this.edit_project.link
 				this.description = this.edit_project.description

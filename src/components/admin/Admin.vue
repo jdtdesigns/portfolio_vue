@@ -142,7 +142,7 @@
 							project.image_previews = []
 
 							_.map(project.images, (image, i) => {
-								storage.ref(image).getDownloadURL()
+								storage.refFromURL(image).getDownloadURL()
 								.then(url => {
 									if ( image.match(/(main)/) ) 
 										project.image_previews.push(['main', url])

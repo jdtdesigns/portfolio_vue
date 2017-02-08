@@ -166,18 +166,6 @@
 										this.show_modal = true
 									}
 								}
-								// storage.refFromURL(image).getDownloadURL()
-								// .then(url => {
-								// 	if ( image.match(/(main)/) ) 
-								// 		project.image_previews.push(['main', url])
-								// 	else project.image_previews.push(['sub', url])
-
-								// 	if ( i === project.images.length - 1 ) {
-								// 		this.edit_project = project
-								// 		this.edit_key = key
-								// 		this.show_modal = true
-								// 	}
-								// })
 							})							
 						})
 					} else this.show_modal = true
@@ -292,6 +280,7 @@
 
 					_.map(this.message_data, (m, i) => {
 						if ( message.key == m.key ) this.message_data.splice(i, 1)
+						if ( !this.message_data.length ) this.new_messages = false
 					})
 
 				  this.$swal("Success!", "The message was deleted.", "success")

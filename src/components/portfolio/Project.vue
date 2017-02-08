@@ -34,12 +34,18 @@
 		background: #eae9e7;
 		.item__image {
 			order: 2;
+			@media (max-width: 700px) {
+				order: 1;
+			}
 		}
 		.item-content {
 			order: 1;
 			padding: 0 70px 0 0;
 			@include size(medium) {
 				padding: 0 20px 0 0;
+			}
+			@media (max-width: 700px) {
+				order: 2;
 			}
 		}
 	}
@@ -95,7 +101,7 @@
 						font-size: .9em;
 					}
 					@include size(small) {
-						margin-right: 10px;
+						margin-right: 15px;
 					}
 					&:not(:last-child):after {
 						content: '';
@@ -105,6 +111,9 @@
 						height: 100%;
 						width: 1px;
 						background: #444;
+						@include size(small) {
+							right: -8px;
+						}
 					}
 				}
 			}

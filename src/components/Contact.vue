@@ -86,7 +86,7 @@
 				})
 				// Save failed
 				.catch(err => {
-					this.$swal("Oops!", "Something went wrong. Please try again.", "error")
+					this.$swal("Oops!", "Something went wrong. Please try again. You can contact me directly at jd.tadlock@yahoo.com", "error")
 				})
 			}
 		},

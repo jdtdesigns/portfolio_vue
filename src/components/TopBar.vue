@@ -112,12 +112,13 @@
 			}
 			a {
 				color: #aaa;
-				&.active {
+				&.active, &:hover {
 					color: #ddd;
+					&:after {
+						background: #fff;
+					}
 				}
-				&:after {
-					background: #fff;
-				}
+
 			}
 			.fa-navicon {
 				color: #ddd;
@@ -125,8 +126,8 @@
 		}
 		&.contact-header {
 			a {
-				color: #eee;
-				&.active {
+				color: #dadada;
+				&.active, &:hover {
 					color: #fff;
 					&:after {
 						background: #fff;

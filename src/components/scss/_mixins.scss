@@ -14,6 +14,7 @@
 	color: #777;
 	position: relative;
 	transform: translate3d(0,0,0);
+	transition: color .4s;
 	@include size(medium) {
 		color: #ddd;
 		margin: 0 0 23px;
@@ -28,7 +29,7 @@
 		height: 1px;
 		background: #777;
 		transform-origin: top left;
-		transition: transform .4s;
+		transition: transform .4s, color .4s;
 		transform: scaleX(0);
 	}
 	&.active, &:hover {

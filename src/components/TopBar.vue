@@ -115,6 +115,9 @@
 				&.active {
 					color: #ddd;
 				}
+				&:after {
+					background: #fff;
+				}
 			}
 			.fa-navicon {
 				color: #ddd;

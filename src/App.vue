@@ -97,6 +97,7 @@ export default {
 		border-radius: 1px;
 		margin-top: 5px;
 		transition: background .3s;
+		user-select: none;
 		@include size(medium) {
 			font-size: 1.075em;
 			padding: 9px 0 9px;

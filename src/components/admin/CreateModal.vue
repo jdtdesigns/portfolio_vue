@@ -124,7 +124,6 @@
 				}
 
 				if ( !this.edit_project ) {
-					console.log('fired')
 					project.date_added = new Date().getTime()
 					project.last_updated = project.date_added
 				} else {

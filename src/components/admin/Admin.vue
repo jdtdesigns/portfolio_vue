@@ -142,18 +142,42 @@
 							project.image_previews = []
 
 							_.map(project.images, (image, i) => {
-								storage.refFromURL(image).getDownloadURL()
-								.then(url => {
+								if ( !image.match(/(firebasestorage)/) ) {
+									storage.ref(image).getDownloadURL()
+									.then(url => {
+										if ( image.match(/(main)/) ) 
+											project.image_previews.push(['main', url])
+										else project.image_previews.push(['sub', url])
+
+										if ( i === project.images.length - 1 ) {
+											this.edit_project = project
+											this.edit_key = key
+											this.show_modal = true
+										}
+									})	
+								} else  {
 									if ( image.match(/(main)/) ) 
-										project.image_previews.push(['main', url])
-									else project.image_previews.push(['sub', url])
+										project.image_previews.push(['main', image])
+									else project.image_previews.push(['sub', image])
 
 									if ( i === project.images.length - 1 ) {
 										this.edit_project = project
 										this.edit_key = key
 										this.show_modal = true
 									}
-								})
+								}
+								// storage.refFromURL(image).getDownloadURL()
+								// .then(url => {
+								// 	if ( image.match(/(main)/) ) 
+								// 		project.image_previews.push(['main', url])
+								// 	else project.image_previews.push(['sub', url])
+
+								// 	if ( i === project.images.length - 1 ) {
+								// 		this.edit_project = project
+								// 		this.edit_key = key
+								// 		this.show_modal = true
+								// 	}
+								// })
 							})							
 						})
 					} else this.show_modal = true
@@ -193,10 +217,9 @@
 						} 
 
 						_.map(project.images, ref  => {
-
 							if ( ref.match(/(main)/) ) {
 								if ( !ref.match(/(firebasestorage)/) ) {
-									storage.refFromURL(ref).getDownloadURL()
+									storage.ref(ref).getDownloadURL()
 									.then(url => {
 										addToProjects(url)
 									})	

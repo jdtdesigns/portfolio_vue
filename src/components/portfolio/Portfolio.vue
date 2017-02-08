@@ -83,16 +83,26 @@
 					project = project.val()
 
 					_.map(project.images, (ref, i)  => {
-						storage.refFromURL(ref).getDownloadURL()
-						.then(url => {
-							if ( url.match(/(main)/) )
-								project.main_image = url
-							else sub_images.push(url)	
+						if ( !ref.match(/(firebasestorage)/) ) {
+							storage.ref(ref).getDownloadURL()
+							.then(url => {
+								if ( url.match(/(main)/) )
+									project.main_image = url
+								else sub_images.push(url)
+
+								if ( i === project.images.length - 1 )
+									this.data.push(project)
+								if ( this.data.length < 5 ) this.view_more_button = false	
+							})	
+						} else {
+							if ( ref.match(/(main)/) )
+								project.main_image = ref
+							else sub_images.push(ref)
 
 							if ( i === project.images.length - 1 )
 								this.data.push(project)
-								if ( this.data.length < 5 ) this.view_more_button = false
-						})
+							if ( this.data.length < 5 ) this.view_more_button = false		
+						}
 					})
 				})
 

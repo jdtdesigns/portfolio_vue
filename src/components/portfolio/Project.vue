@@ -47,9 +47,6 @@
 			@media (max-width: 700px) {
 				order: 2;
 			}
-			@include size(small) {
-				padding: 0 0 0 15px;
-			}
 		}
 	}
 	.item {
@@ -92,7 +89,7 @@
 				padding-left: 0;
 			}
 			@include size(small) {
-				padding-left: 15px;
+				padding-left: 15px !important;
 			}
 			.item-tags {
 				margin-bottom: 15px;

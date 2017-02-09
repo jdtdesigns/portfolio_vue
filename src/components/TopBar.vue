@@ -152,7 +152,7 @@
 					}
 				}
 			}
-			.logo h3 {
+			.logo {
 				opacity: 1;
 				visibility: visible;
 			}
@@ -170,25 +170,27 @@
 				display: block;
 			}
 		}
-		.logo h3 {
-			text-transform: uppercase;
-			font-family: 'Lato', sans-serif;
-			font-weight: 300;
-			font-size: 1.1em;
-			color: #777;
-			letter-spacing: .02em;
-			position: relative;
+		.logo {
 			opacity: 0;
 			visibility: hidden;
 			transition: opacity .8s, visibility .8s;
-			&:after {
-				content: '';
-				position: absolute;
-				bottom: -3px;
-				left: 0;
-				width: 100%;
-				height: 1px;
-				background: #999;
+			h3 {
+				text-transform: uppercase;
+				font-family: 'Lato', sans-serif;
+				font-weight: 300;
+				font-size: 1.1em;
+				color: #777;
+				letter-spacing: .02em;
+				position: relative;
+				&:after {
+					content: '';
+					position: absolute;
+					bottom: -3px;
+					left: 0;
+					width: 100%;
+					height: 1px;
+					background: #999;
+				}
 			}
 		}
 		nav {

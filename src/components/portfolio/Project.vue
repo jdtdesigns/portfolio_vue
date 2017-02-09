@@ -47,6 +47,9 @@
 			@media (max-width: 700px) {
 				order: 2;
 			}
+			@include size(small) {
+				padding: 0 0 0 15px;
+			}
 		}
 	}
 	.item {

@@ -13,10 +13,11 @@
 				<p class="landing__about">I'm passionate about my work. Development and design bring joy to my life and I bring that joy and my passion into every job I take on.</p>
 			</div>
 			<div class="landing__img">
-				<div class="scroll-icon column y-center">
+				<a href="#" class="scroll-icon column y-center"
+					@click.prevent="scrollToProjects">
 					<i class="fa fa-television" aria-hidden="true"></i>
 					<span class="scroll-icon__text">scroll down</span>
-				</div>
+				</a>
 			</div>
 		</div>
 
@@ -46,6 +47,7 @@
 
 <script>
 	import Project from './Project.vue'
+	import jump from 'jump.js'
 
 	export default {
 		data() {
@@ -154,7 +156,10 @@
 				if ( window.innerWidth < 768 ) {
 					this.window_height = 400 + 'px'
 				}
-				
+			},
+
+			scrollToProjects() {
+				jump('.portfolio-header', {offset: -40})
 			}
 		},
 		components: {
@@ -298,6 +303,8 @@
 				bottom: 20px;
 				left: -100px;
 				right: 0;
+				width: 100px;
+				margin: 0 auto;
 				@include size(medium) {
 					left: -80px;
 				}

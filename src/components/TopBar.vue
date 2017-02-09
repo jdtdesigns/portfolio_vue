@@ -148,7 +148,7 @@
 				a {
 					color: #999 !important;
 					&:after {
-						background: #999;
+						background: #999 !important;
 					}
 				}
 			}

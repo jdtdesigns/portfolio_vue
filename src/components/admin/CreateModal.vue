@@ -16,7 +16,7 @@
 				type="text" 
 				placeholder="Tag Name"
 				v-model="tag"
-				@keyup.13="addTag">
+				@keydown.13.prevent="addTag">
 			<div class="image-previews row">
 				<span v-if="!image_previews.length">No Images Added</span>
 				<img v-for="(image, i) in image_previews" 
@@ -141,6 +141,7 @@
 
 							if ( i === this.images.length - 1 ) {
 								projects.child(key).set(project)
+								this.$emit('project_edited', [this.edit_key, project])
 
 								this.$swal("Success!", "The project has been saved.", "success")
 								this.resetData()
@@ -148,9 +149,9 @@
 						})				
 					} else {
 						project.images.push(image[1])
-
 						if ( i === this.images.length - 1 ) {
 							projects.child(key).set(project)
+							this.$emit('project_edited', [this.edit_key, project])
 
 							this.$swal("Success!", "The project has been edited.", "success")
 							this.resetData()

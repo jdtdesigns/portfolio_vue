@@ -11,6 +11,7 @@
 			v-if="show_modal"
 			@close_modal="show_modal = $event"
 			@open="show_modal = $event"
+			@project_edited="updateProject($event)"
 			:edit_project="edit_project"
 			:edit_key="edit_key"></create-modal>
 
@@ -217,14 +218,13 @@
 					})				
 			},
 
-			getMessages() {
-				const db = firebase.database(),
-							messages = db.ref('/messages')
-
-				messages.on('child_added', message => {
-					if ( !message.val().is_read ) this.new_messages = true
-					this.message_data.push(message.val())
-				})
+			updateProject(info) {
+				_.map(this.data, (project, i) => {
+					if ( info[0] == project.key ) {
+						this.data[i].images = info[1].images
+						this.data[i].tags = info[1].tags
+					}
+				})	
 			},
 
 			deleteProject(key, index) {
@@ -244,6 +244,16 @@
 						if ( key == project.key ) this.data.splice(i, 1)
 					})				
 				  this.$swal("Deleted!", "The project was deleted.", "success")
+				})
+			},
+
+			getMessages() {
+				const db = firebase.database(),
+							messages = db.ref('/messages')
+
+				messages.on('child_added', message => {
+					if ( !message.val().is_read ) this.new_messages = true
+					this.message_data.push(message.val())
 				})
 			},
 

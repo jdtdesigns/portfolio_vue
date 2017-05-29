@@ -40,7 +40,7 @@
 		<div class="view-more-wrap row x-center">
 			<button class="view-more"
 				@click="getMore"
-				v-if="view_more_button">View More</button>
+				v-if="paginate && view_more_button">View More</button>
 		</div>
 	</section>
 </template>
@@ -68,6 +68,9 @@
 			pages() {
 				return _.chunk(this.sorted, 4)
 			},
+			paginate() {
+				return this.pages.length > 1;
+			},
 			window_height() {
 				return window.innerWidth < 768 ? window.innerHeight + 'px' : '100vh'
 			}
@@ -83,7 +86,7 @@
 					const sub_images = []
 
 					project = project.val()
-
+						
 					_.map(project.images, (ref, i)  => {
 						if ( !ref.match(/(firebasestorage)/) ) {
 							storage.ref(ref).getDownloadURL()
@@ -94,16 +97,14 @@
 
 								if ( i === project.images.length - 1 )
 									this.data.push(project)
-								if ( this.data.length < 5 ) this.view_more_button = false	
 							})	
 						} else {
 							if ( ref.match(/(main)/) )
 								project.main_image = ref
 							else sub_images.push(ref)
 
-							if ( i === project.images.length - 1 )
+							if ( i === project.images.length - 1 ) 
 								this.data.push(project)
-							if ( this.data.length < 5 ) this.view_more_button = false		
 						}
 					})
 				})

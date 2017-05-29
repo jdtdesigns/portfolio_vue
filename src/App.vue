@@ -17,6 +17,11 @@ export default {
   	TopBar,
   	appFooter: Footer
   },
+  methods: {
+  	test() {
+  		console.log('fired');
+  	}
+  },
   created() {
   	
   	// firebase.auth().createUserWithEmailAndPassword('jt7903@gmail.com', 'jdluvssarah1983')

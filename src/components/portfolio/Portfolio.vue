@@ -392,7 +392,7 @@
 		button.view-more {
 			margin: 40px 0 40px;
 			background: none;
-			font-size: 1.2em;
+			font-size: 1.025em;
 			text-transform: uppercase;
 			color: #999;
 			border: 1px solid #999;

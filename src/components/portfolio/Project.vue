@@ -97,6 +97,7 @@
 					margin-right: 20px;
 					font-family: 'Lato', sans-serif;
 					position: relative;
+					white-space: nowrap;
 					@include size(medium) {
 						font-size: .9em;
 					}

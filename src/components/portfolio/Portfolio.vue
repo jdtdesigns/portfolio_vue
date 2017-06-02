@@ -240,6 +240,7 @@
 				margin: 0 14px;
 				position: relative;
 				color: #777;
+				white-space: nowrap;
 				&:not(:last-child) {
 					&:after {
 						content: '';

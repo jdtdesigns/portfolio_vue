@@ -11,6 +11,7 @@ import TopBar from './components/TopBar.vue'
 import Footer from './components/Footer.vue'
 // import faker from 'faker'
 import { bus } from './main'
+import './assets/logo.png';
 
 export default {
   components: {

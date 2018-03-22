@@ -11,7 +11,6 @@ import TopBar from './components/TopBar.vue'
 import Footer from './components/Footer.vue'
 // import faker from 'faker'
 import { bus } from './main'
-import './assets/logo.png';
 
 export default {
   components: {
@@ -24,10 +23,6 @@ export default {
   	}
   },
   created() {
-  	
-  	// firebase.auth().createUserWithEmailAndPassword('jt7903@gmail.com', 'jdluvssarah1983')
-  	// .catch(err => console.log(err))
-
   // 	const db = firebase.database(),
 		// 			projects = db.ref('projects/')
 		// let c

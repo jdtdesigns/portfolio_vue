@@ -51,13 +51,13 @@
 						<tr v-if="!data.length">
 							<td colspan="5" height="100">No Projects Currently.</td>
 						</tr>
-						<tr v-for="(project, i) in projects" :data-project="project.key">
+						<tr v-for="(project, i) in projects" :key="i" :data-project="project.key">
 							<td>
 								<img :src="project.image">
 							</td>
 							<td>{{ project.title }}</td>
 							<td>
-								<span v-for="tag in project.tags">{{ tag }}</span>
+								<span v-for="(tag, j) in project.tags" :key="j">{{ tag }}</span>
 							</td>
 							<td>{{ project.date }}</td>
 							<td>
@@ -78,7 +78,8 @@
 						<th></th>
 					</thead>
 					<tbody>
-						<message v-for="message in messages" 
+						<message v-for="(message, i) in messages" 
+							:key="i"
 							:message="message"
 							@show_message="showMessage($event)"></message>
 						<tr v-if="!messages.length">
